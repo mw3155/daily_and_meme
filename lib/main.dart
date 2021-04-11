@@ -23,23 +23,25 @@ class MyApp extends StatelessWidget {
   }
 }
 
-double myFontSizeMed = 36;
+double myFontSizeMed = 32;
 
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
+// fun global variables
 final int maxMeetingPersons = 10;
 final int minMeetingDuration = 10;
 final int maxMeetingDuration = 31;
+int n_meeting_minutes = 15;
+int n_meeting_persons = 5;
+int n_minutes_per_person = 0;
+int n_seconds_per_person = 0;
+int current_speaker = 0;
+bool time_stopped = false;
 
 class _HomePageState extends State<HomePage> {
-  int n_meeting_minutes = 15;
-  int n_meeting_persons = 5;
-  int n_minutes_per_person = 0;
-  int n_seconds_per_person = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,7 +108,7 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 Text('Es gibt $n_meeting_persons Teilnehmer.'),
                 Text(
-                    'Jeder hat eine Redezeit von ${n_minutes_per_person} Minuten und ${n_seconds_per_person as int} Sekunden.'),
+                    'Jeder hat eine Redezeit von $n_minutes_per_person Minuten und $n_seconds_per_person Sekunden.'),
               ],
             ),
           ),
@@ -117,6 +119,7 @@ class _HomePageState extends State<HomePage> {
             TextButton(
                 child: Text('Starten'),
                 onPressed: () {
+                  current_speaker = 1;
                   Navigator.pushNamed(context, "timer");
                 }),
           ],
@@ -157,6 +160,46 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   Widget _buildTimerPage() {
-    return Text("timer");
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Person $current_speaker",
+          style: TextStyle(fontSize: myFontSizeMed),
+        ),
+        Padding(padding: EdgeInsets.all(32)),
+        Text(
+          "Du hast noch $n_minutes_per_person Minuten und $n_seconds_per_person Sekunden",
+          style: TextStyle(fontSize: myFontSizeMed),
+        ),
+        Padding(padding: EdgeInsets.all(32)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+                onPressed: () {
+                  setState(() {
+                    time_stopped ^= true;
+                  });
+                },
+                child: Text(
+                  time_stopped ? "Fortsetzen" : "Pause",
+                  style: TextStyle(fontSize: myFontSizeMed),
+                )),
+            TextButton(
+                onPressed: () {
+                  current_speaker++;
+                  current_speaker > n_meeting_persons
+                      ? null
+                      : Navigator.pushNamed(context, "timer");
+                },
+                child: Text(
+                  "Fertig",
+                  style: TextStyle(fontSize: myFontSizeMed),
+                ))
+          ],
+        )
+      ],
+    );
   }
 }
