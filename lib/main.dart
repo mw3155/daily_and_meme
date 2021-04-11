@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => HomePage(),
         "timer": (context) => TimerPage(),
+        "meme": (context) => MemePage(),
       },
     );
   }
@@ -190,7 +191,7 @@ class _TimerPageState extends State<TimerPage> {
                 onPressed: () {
                   current_speaker++;
                   current_speaker > n_meeting_persons
-                      ? null
+                      ? Navigator.pushNamed(context, "meme")
                       : Navigator.pushNamed(context, "timer");
                 },
                 child: Text(
@@ -199,6 +200,36 @@ class _TimerPageState extends State<TimerPage> {
                 ))
           ],
         )
+      ],
+    );
+  }
+}
+
+class MemePage extends StatefulWidget {
+  @override
+  _MemePageState createState() => _MemePageState();
+}
+
+class _MemePageState extends State<MemePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+            child: Container(
+      padding: const EdgeInsets.all(0),
+      child: _buildMemePage(),
+    )));
+  }
+
+  Widget _buildMemePage() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.network(
+          "https://upload.wikimedia.org/wikipedia/en/5/5f/Original_Doge_meme.jpg",
+          width: 1280,
+          fit: BoxFit.fill,
+        ),
       ],
     );
   }
