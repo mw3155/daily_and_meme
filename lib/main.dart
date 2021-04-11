@@ -14,7 +14,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         primaryColor: Colors.green,
       ),
-      home: HomePage(),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => HomePage(),
+        "timer": (context) => TimerPage(),
+      },
     );
   }
 }
@@ -104,9 +108,10 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text("Abbrechen")),
             TextButton(
-              child: Text('Starten'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
+                child: Text('Starten'),
+                onPressed: () {
+                  Navigator.pushNamed(context, "timer");
+                }),
           ],
         );
       },
@@ -136,6 +141,15 @@ class TimerPage extends StatefulWidget {
 class _TimerPageState extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+        body: Center(
+            child: Container(
+      padding: const EdgeInsets.all(32),
+      child: _buildTimerPage(),
+    )));
+  }
+
+  Widget _buildTimerPage() {
+    return Text("timer");
   }
 }
