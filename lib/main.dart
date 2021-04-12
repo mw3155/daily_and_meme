@@ -32,15 +32,11 @@ class HomePage extends StatefulWidget {
 }
 
 // fun global variables
-final int maxMeetingPersons = 10;
-final int minMeetingDuration = 10;
-final int maxMeetingDuration = 31;
-int n_meeting_minutes = 15;
-int n_meeting_persons = 5;
-int n_minutes_per_person = 0;
-int n_seconds_per_person = 0;
-int current_speaker = 0;
-bool time_stopped = false;
+int nMeetingMinutes = 15;
+int nMeetingPersons = 5;
+Duration durationPerPerson = Duration(seconds: 1);
+int currentSpeaker = 0;
+bool isTimeStopped = false;
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -59,31 +55,30 @@ class _HomePageState extends State<HomePage> {
         Text("Wie viele Personen nehmen teil?",
             style: TextStyle(fontSize: myFontSizeMed)),
         NumberPicker(
-            value: n_meeting_persons,
+            value: nMeetingPersons,
             minValue: 1,
             maxValue: 100,
             step: 1,
             haptics: true,
             axis: Axis.horizontal,
             onChanged: (newValue) =>
-                setState(() => n_meeting_persons = newValue)),
+                setState(() => nMeetingPersons = newValue)),
         Text("Wie viele Minuten sind insgesamt eingeplant?",
             style: TextStyle(fontSize: myFontSizeMed)),
         NumberPicker(
-            value: n_meeting_minutes,
+            value: nMeetingMinutes,
             minValue: 1,
             maxValue: 100,
             step: 1,
             haptics: true,
             axis: Axis.horizontal,
             onChanged: (newValue) =>
-                setState(() => n_meeting_minutes = newValue)),
+                setState(() => nMeetingMinutes = newValue)),
         Padding(
           child: ElevatedButton(
               onPressed: () {
-                n_seconds_per_person =
-                    (n_meeting_minutes * 60 ~/ n_meeting_persons) % 60;
-                n_minutes_per_person = n_meeting_minutes ~/ n_meeting_persons;
+                int nSecondsPerPerson = nMeetingMinutes * 60 ~/ nMeetingPersons;
+                durationPerPerson = Duration(seconds: nSecondsPerPerson);
                 _showConfirmDialog();
               },
               child: Text(
@@ -107,9 +102,9 @@ class _HomePageState extends State<HomePage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Es gibt $n_meeting_persons Teilnehmer.'),
+                Text('Es gibt $nMeetingPersons Teilnehmer.'),
                 Text(
-                    'Jeder hat eine Redezeit von $n_minutes_per_person Minuten und $n_seconds_per_person Sekunden.'),
+                    'Jeder hat eine Redezeit von ${durationPerPerson.inMinutes} Minuten und ${durationPerPerson.inSeconds.remainder(60)} Sekunden.'),
               ],
             ),
           ),
@@ -120,7 +115,7 @@ class _HomePageState extends State<HomePage> {
             TextButton(
                 child: Text('Starten'),
                 onPressed: () {
-                  current_speaker = 1;
+                  currentSpeaker = 1;
                   Navigator.pushNamed(context, "timer");
                 }),
           ],
@@ -149,7 +144,8 @@ class TimerPage extends StatefulWidget {
   _TimerPageState createState() => _TimerPageState();
 }
 
-class _TimerPageState extends State<TimerPage> {
+class _TimerPageState extends State<TimerPage>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,18 +156,35 @@ class _TimerPageState extends State<TimerPage> {
     )));
   }
 
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: durationPerPerson.inSeconds ~/ 60));
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Widget _buildTimerPage() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Person $current_speaker",
+          "Person $currentSpeaker",
           style: TextStyle(fontSize: myFontSizeMed),
         ),
         Padding(padding: EdgeInsets.all(32)),
-        Text(
-          "Du hast noch $n_minutes_per_person Minuten und $n_seconds_per_person Sekunden",
-          style: TextStyle(fontSize: myFontSizeMed),
+        Countdown(
+          animation: StepTween(begin: durationPerPerson.inSeconds, end: 0)
+              .animate(_controller),
         ),
         Padding(padding: EdgeInsets.all(32)),
         Row(
@@ -180,17 +193,23 @@ class _TimerPageState extends State<TimerPage> {
             TextButton(
                 onPressed: () {
                   setState(() {
-                    time_stopped ^= true;
+                    if (isTimeStopped) {
+                      isTimeStopped = false;
+                      _controller.forward();
+                    } else {
+                      isTimeStopped = true;
+                      _controller.stop();
+                    }
                   });
                 },
                 child: Text(
-                  time_stopped ? "Fortsetzen" : "Pause",
+                  isTimeStopped ? "Fortsetzen" : "Pause",
                   style: TextStyle(fontSize: myFontSizeMed),
                 )),
             TextButton(
                 onPressed: () {
-                  current_speaker++;
-                  current_speaker > n_meeting_persons
+                  currentSpeaker++;
+                  currentSpeaker > nMeetingPersons
                       ? Navigator.pushNamed(context, "meme")
                       : Navigator.pushNamed(context, "timer");
                 },
@@ -201,6 +220,22 @@ class _TimerPageState extends State<TimerPage> {
           ],
         )
       ],
+    );
+  }
+}
+
+class Countdown extends AnimatedWidget {
+  Countdown({Key? key, required this.animation})
+      : super(key: key, listenable: animation);
+  Animation<int> animation;
+
+  @override
+  Widget build(BuildContext context) {
+    int timerText = animation.value;
+    Duration currentDuration = Duration(seconds: timerText);
+    return Text(
+      "Noch ${currentDuration.inMinutes} Minuten und ${currentDuration.inSeconds.remainder(60)} Sekunden",
+      style: TextStyle(fontSize: myFontSizeMed),
     );
   }
 }
