@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
+//TODO: memes
+
 void main() {
   runApp(MyApp());
 }
+
+final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Daily and Meme',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
@@ -48,15 +53,37 @@ Color color2 = Color(0xffF9B200);
 double myFontSizeMed = 32;
 double myFontSizeSmall = 16;
 
+Widget buildBottomSheet() {
+  return Container(
+    padding: EdgeInsets.all(32),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: Icon(Icons.home),
+          tooltip: "Zur Startseite",
+          iconSize: 32,
+          onPressed: () {
+            navigatorKey.currentState?.pushNamed("/");
+          },
+        ),
+      ],
+    ),
+  );
+}
+
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-            child: Container(
-      padding: const EdgeInsets.all(32),
-      child: _buildHomepage(),
-    )));
+      bottomSheet: buildBottomSheet(),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(32),
+          child: _buildHomepage(),
+        ),
+      ),
+    );
   }
 
   Widget _buildHomepage() {
@@ -86,15 +113,16 @@ class _HomePageState extends State<HomePage> {
                 setState(() => nMeetingMinutes = newValue)),
         Padding(
           child: ElevatedButton(
-              onPressed: () {
-                int nSecondsPerPerson = nMeetingMinutes * 60 ~/ nMeetingPersons;
-                durationPerPerson = Duration(seconds: nSecondsPerPerson);
-                _showConfirmDialog();
-              },
-              child: Text(
-                "Meeting starten",
-                style: TextStyle(fontSize: myFontSizeMed),
-              )),
+            onPressed: () {
+              int nSecondsPerPerson = nMeetingMinutes * 60 ~/ nMeetingPersons;
+              durationPerPerson = Duration(seconds: nSecondsPerPerson);
+              _showConfirmDialog();
+            },
+            child: Text(
+              "Meeting starten",
+              style: TextStyle(fontSize: myFontSizeMed),
+            ),
+          ),
           padding: EdgeInsets.all(32),
         ),
       ],
@@ -137,17 +165,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   void updateIsSelectedList(int index, List<bool> isSelected) {
-    setState(() {
-      for (int buttonIndex = 0;
-          buttonIndex < isSelected.length;
-          buttonIndex++) {
-        if (buttonIndex == index) {
-          isSelected[buttonIndex] = true;
-        } else {
-          isSelected[buttonIndex] = false;
+    setState(
+      () {
+        for (int buttonIndex = 0;
+            buttonIndex < isSelected.length;
+            buttonIndex++) {
+          if (buttonIndex == index) {
+            isSelected[buttonIndex] = true;
+          } else {
+            isSelected[buttonIndex] = false;
+          }
         }
-      }
-    });
+      },
+    );
   }
 }
 
@@ -161,14 +191,18 @@ class _TimerPageState extends State<TimerPage>
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        // disable going back
-        onWillPop: () => Future.value(false),
-        child: Scaffold(
-            body: Center(
-                child: Container(
-          padding: const EdgeInsets.all(32),
-          child: _buildTimerPage(),
-        ))));
+      // disable going back
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+        bottomSheet: buildBottomSheet(),
+        body: Center(
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            child: _buildTimerPage(),
+          ),
+        ),
+      ),
+    );
   }
 
   late AnimationController _controller;
@@ -184,13 +218,15 @@ class _TimerPageState extends State<TimerPage>
     );
     _controller.forward();
 
-    _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _showTimerFinishedDialog();
-      } else if (status == AnimationStatus.dismissed) {
-        _controller.forward();
-      }
-    });
+    _controller.addStatusListener(
+      (status) {
+        if (status == AnimationStatus.completed) {
+          _showTimerFinishedDialog();
+        } else if (status == AnimationStatus.dismissed) {
+          _controller.forward();
+        }
+      },
+    );
   }
 
   @override
@@ -315,13 +351,19 @@ class MemePage extends StatefulWidget {
 class _MemePageState extends State<MemePage> {
   @override
   Widget build(BuildContext context) {
-    // TODO: disable back + add button: return to home and reset global vars
-    return Scaffold(
+    return WillPopScope(
+      // disable going back
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+        bottomSheet: buildBottomSheet(),
         body: Center(
-            child: Container(
-      padding: const EdgeInsets.all(32),
-      child: _buildMemePage(),
-    )));
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            child: _buildMemePage(),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildMemePage() {
@@ -358,16 +400,22 @@ class _MemePageState extends State<MemePage> {
   }
 }
 
-//TODO: create endpage: get back to work: https://media.giphy.com/media/jkSvCVEXWlOla/source.gif
 class WorkPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      // disable going back
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+        bottomSheet: buildBottomSheet(),
         body: Center(
-            child: Container(
-      padding: const EdgeInsets.all(32),
-      child: _buildWorkPage(),
-    )));
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            child: _buildWorkPage(),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildWorkPage() {
