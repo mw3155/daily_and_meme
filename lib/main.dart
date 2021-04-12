@@ -9,16 +9,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'StehaufUhr',
+      title: 'Daily and Meme',
       theme: ThemeData(
-        primarySwatch: Colors.green,
-        primaryColor: Colors.green,
+        primarySwatch: Colors.blueGrey,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(primary: Colors.amber),
+        ),
+        // color is useless?
+        primaryColor: Colors.pink,
       ),
       initialRoute: "/",
       routes: {
         "/": (context) => HomePage(),
         "timer": (context) => TimerPage(),
         "meme": (context) => MemePage(),
+        "work": (context) => WorkPage(),
       },
     );
   }
@@ -30,8 +35,6 @@ class HomePage extends StatefulWidget {
 }
 
 // fun global variables
-double myFontSizeMed = 32;
-double myFontSizeSmall = 16;
 int nMeetingMinutes = 15;
 int nMeetingPersons = 5;
 Duration durationPerPerson = Duration(seconds: 1);
@@ -39,6 +42,11 @@ int currentSpeaker = 0;
 bool isTimeStopped = false;
 Duration durationExtraTime = Duration(seconds: 30);
 bool isExtraTime = false;
+// styling
+Color color1 = Color(0xff004489);
+Color color2 = Color(0xffF9B200);
+double myFontSizeMed = 32;
+double myFontSizeSmall = 16;
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -100,27 +108,29 @@ class _HomePageState extends State<HomePage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Einstellungen'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Es gibt $nMeetingPersons Teilnehmer.'),
-                Text(
-                    'Jeder hat eine Redezeit von ${durationPerPerson.inMinutes} Minuten und ${durationPerPerson.inSeconds.remainder(60)} Sekunden.'),
-              ],
-            ),
+          title: Text(
+              'Es gibt $nMeetingPersons Teilnehmer\nJeder hat eine Redezeit von ${durationPerPerson.inMinutes} Minuten und ${durationPerPerson.inSeconds.remainder(60)} Sekunden.'),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(padding: EdgeInsets.all(8)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text("Abbrechen")),
+                  ElevatedButton(
+                      child: Text('Starten'),
+                      onPressed: () {
+                        currentSpeaker = 1;
+                        Navigator.pushNamed(context, "timer");
+                      }),
+                ],
+              )
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text("Abbrechen")),
-            TextButton(
-                child: Text('Starten'),
-                onPressed: () {
-                  currentSpeaker = 1;
-                  Navigator.pushNamed(context, "timer");
-                }),
-          ],
         );
       },
     );
@@ -206,7 +216,7 @@ class _TimerPageState extends State<TimerPage>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TextButton(
+            ElevatedButton(
                 onPressed: () {
                   setState(() {
                     if (isTimeStopped) {
@@ -222,7 +232,7 @@ class _TimerPageState extends State<TimerPage>
                   isTimeStopped ? "Fortsetzen" : "Pause",
                   style: TextStyle(fontSize: myFontSizeMed),
                 )),
-            TextButton(
+            ElevatedButton(
               child: Text(
                 "Fertig",
                 style: TextStyle(fontSize: myFontSizeMed),
@@ -255,7 +265,7 @@ class _TimerPageState extends State<TimerPage>
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextButton(
+              ElevatedButton(
                 child: Text(
                   "+30 Sekunden",
                   style: TextStyle(fontSize: myFontSizeSmall),
@@ -265,7 +275,7 @@ class _TimerPageState extends State<TimerPage>
                   Navigator.pushNamed(context, "timer");
                 },
               ),
-              TextButton(
+              ElevatedButton(
                 child: Text(
                   "Fertig",
                   style: TextStyle(fontSize: myFontSizeSmall),
@@ -309,7 +319,7 @@ class _MemePageState extends State<MemePage> {
     return Scaffold(
         body: Center(
             child: Container(
-      padding: const EdgeInsets.all(0),
+      padding: const EdgeInsets.all(32),
       child: _buildMemePage(),
     )));
   }
@@ -323,7 +333,52 @@ class _MemePageState extends State<MemePage> {
           width: 1280,
           fit: BoxFit.fill,
         ),
-        Text("data"),
+        Padding(padding: EdgeInsets.all(32)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, "work"),
+              child: Text(
+                "Ran an die Arbeit!",
+                style: TextStyle(fontSize: myFontSizeMed),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: null,
+              child: Text(
+                "Noch ein Meme!",
+                style: TextStyle(fontSize: myFontSizeMed),
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+}
+
+//TODO: create endpage: get back to work: https://media.giphy.com/media/jkSvCVEXWlOla/source.gif
+class WorkPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+            child: Container(
+      padding: const EdgeInsets.all(32),
+      child: _buildWorkPage(),
+    )));
+  }
+
+  Widget _buildWorkPage() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.network(
+          "https://media.giphy.com/media/jkSvCVEXWlOla/source.gif",
+          width: 1280,
+          fit: BoxFit.fill,
+        ),
       ],
     );
   }
