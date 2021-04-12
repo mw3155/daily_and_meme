@@ -37,6 +37,8 @@ int nMeetingPersons = 5;
 Duration durationPerPerson = Duration(seconds: 1);
 int currentSpeaker = 0;
 bool isTimeStopped = false;
+Duration durationExtraTime = Duration(seconds: 30);
+bool isExtraTime = false;
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -148,12 +150,15 @@ class _TimerPageState extends State<TimerPage>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-            child: Container(
-      padding: const EdgeInsets.all(32),
-      child: _buildTimerPage(),
-    )));
+    return WillPopScope(
+        // disable going back
+        onWillPop: () => Future.value(false),
+        child: Scaffold(
+            body: Center(
+                child: Container(
+          padding: const EdgeInsets.all(32),
+          child: _buildTimerPage(),
+        ))));
   }
 
   late AnimationController _controller;
@@ -162,9 +167,20 @@ class _TimerPageState extends State<TimerPage>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        vsync: this,
-        duration: Duration(seconds: durationPerPerson.inSeconds ~/ 60));
+      vsync: this,
+      duration: isExtraTime
+          ? Duration(seconds: durationExtraTime.inSeconds)
+          : Duration(seconds: durationPerPerson.inSeconds),
+    );
     _controller.forward();
+
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _showTimerFinishedDialog();
+      } else if (status == AnimationStatus.dismissed) {
+        _controller.forward();
+      }
+    });
   }
 
   @override
@@ -183,7 +199,7 @@ class _TimerPageState extends State<TimerPage>
         ),
         Padding(padding: EdgeInsets.all(32)),
         Countdown(
-          animation: StepTween(begin: durationPerPerson.inSeconds, end: 0)
+          animation: StepTween(begin: _controller.duration!.inSeconds, end: 0)
               .animate(_controller),
         ),
         Padding(padding: EdgeInsets.all(32)),
@@ -207,24 +223,65 @@ class _TimerPageState extends State<TimerPage>
                   style: TextStyle(fontSize: myFontSizeMed),
                 )),
             TextButton(
-                onPressed: () {
-                  currentSpeaker++;
-                  currentSpeaker > nMeetingPersons
-                      ? Navigator.pushNamed(context, "meme")
-                      : Navigator.pushNamed(context, "timer");
-                },
-                child: Text(
-                  "Fertig",
-                  style: TextStyle(fontSize: myFontSizeMed),
-                ))
+              child: Text(
+                "Fertig",
+                style: TextStyle(fontSize: myFontSizeMed),
+              ),
+              onPressed: () => _goToNextSpeaker(),
+            ),
           ],
         )
       ],
     );
   }
+
+  void _goToNextSpeaker() {
+    isExtraTime = false;
+    currentSpeaker++;
+    currentSpeaker > nMeetingPersons
+        ? Navigator.pushNamed(context, "meme")
+        : Navigator.pushNamed(context, "timer");
+  }
+
+  Future<void> _showTimerFinishedDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Deine Zeit ist abgelaufen'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Continue?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                "+30 Sekunden",
+              ),
+              onPressed: () {
+                isExtraTime = true;
+                Navigator.pushNamed(context, "timer");
+              },
+            ),
+            TextButton(
+              child: Text(
+                "Fertig",
+              ),
+              onPressed: () => _goToNextSpeaker(),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 class Countdown extends AnimatedWidget {
+  // not sure what this key thing does, but "?" seems like a good fix
   Countdown({Key? key, required this.animation})
       : super(key: key, listenable: animation);
   Animation<int> animation;
@@ -234,7 +291,7 @@ class Countdown extends AnimatedWidget {
     int timerText = animation.value;
     Duration currentDuration = Duration(seconds: timerText);
     return Text(
-      "Noch ${currentDuration.inMinutes} Minuten und ${currentDuration.inSeconds.remainder(60)} Sekunden",
+      "Du hast noch ${currentDuration.inMinutes} Minuten und ${currentDuration.inSeconds.remainder(60)} Sekunden",
       style: TextStyle(fontSize: myFontSizeMed),
     );
   }
