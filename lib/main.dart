@@ -24,14 +24,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-double myFontSizeMed = 32;
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 // fun global variables
+double myFontSizeMed = 32;
+double myFontSizeSmall = 16;
 int nMeetingMinutes = 15;
 int nMeetingPersons = 5;
 Duration durationPerPerson = Duration(seconds: 1);
@@ -249,31 +249,31 @@ class _TimerPageState extends State<TimerPage>
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Deine Zeit ist abgelaufen'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Continue?'),
-              ],
-            ),
+          title: Text(
+            'Deine Zeit ist abgelaufen',
           ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(
-                "+30 Sekunden",
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                child: Text(
+                  "+30 Sekunden",
+                  style: TextStyle(fontSize: myFontSizeSmall),
+                ),
+                onPressed: () {
+                  isExtraTime = true;
+                  Navigator.pushNamed(context, "timer");
+                },
               ),
-              onPressed: () {
-                isExtraTime = true;
-                Navigator.pushNamed(context, "timer");
-              },
-            ),
-            TextButton(
-              child: Text(
-                "Fertig",
+              TextButton(
+                child: Text(
+                  "Fertig",
+                  style: TextStyle(fontSize: myFontSizeSmall),
+                ),
+                onPressed: () => _goToNextSpeaker(),
               ),
-              onPressed: () => _goToNextSpeaker(),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -305,6 +305,7 @@ class MemePage extends StatefulWidget {
 class _MemePageState extends State<MemePage> {
   @override
   Widget build(BuildContext context) {
+    // TODO: disable back + add button: return to home and reset global vars
     return Scaffold(
         body: Center(
             child: Container(
@@ -322,6 +323,7 @@ class _MemePageState extends State<MemePage> {
           width: 1280,
           fit: BoxFit.fill,
         ),
+        Text("data"),
       ],
     );
   }
