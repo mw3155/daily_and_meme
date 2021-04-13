@@ -1,8 +1,19 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-//TODO: memes
+/*
+TODO:
+- memes
+- timer animation
+- ads
+- hiring
+- donations
+- proversion
+*/
 
 void main() {
   runApp(MyApp());
@@ -56,6 +67,7 @@ int currentSpeaker = 0;
 bool isTimeStopped = false;
 Duration durationExtraTime = Duration(seconds: 30);
 bool isExtraTime = false;
+int memeCounter = 0;
 // styling
 Color color1 = Color(0xff004489);
 Color color2 = Color(0xffF9B200);
@@ -363,6 +375,8 @@ class _MemePageState extends State<MemePage> {
         bottomSheet: buildBottomSheet(),
         body: Center(
           child: Container(
+            height: 1080,
+            width: 1280,
             padding: const EdgeInsets.all(32),
             child: _buildMemePage(),
           ),
@@ -371,16 +385,23 @@ class _MemePageState extends State<MemePage> {
     );
   }
 
+  String currentMemeTitle = "";
+  String currentMemeImage = "";
+
   Widget _buildMemePage() {
+    if (memeCounter == 0) getNextMeme();
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.network(
-          "https://upload.wikimedia.org/wikipedia/en/5/5f/Original_Doge_meme.jpg",
-          width: 1280,
-          fit: BoxFit.fill,
-        ),
-        Padding(padding: EdgeInsets.all(32)),
+        Text(currentMemeTitle),
+        memeCounter == 0
+            ? Icon(Icons.photo)
+            : Image.network(
+                currentMemeImage,
+                height: 600,
+                fit: BoxFit.contain,
+              ),
+        Padding(padding: EdgeInsets.all(16)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -391,7 +412,9 @@ class _MemePageState extends State<MemePage> {
               ),
             ),
             ElevatedButton(
-              onPressed: null,
+              onPressed: () {
+                getNextMeme();
+              },
               child: Text(
                 "Noch ein Meme!",
               ),
@@ -400,6 +423,31 @@ class _MemePageState extends State<MemePage> {
         )
       ],
     );
+  }
+
+  void getNextMeme() async {
+    // get json from programmerhumor and decode it
+    String memeSite = "www.reddit.com";
+    String memeSiteEnding = "/r/ProgrammerHumor/top.json";
+    final response = await http.get(Uri.https(memeSite, memeSiteEnding));
+
+    Map<String, dynamic> memeJson = jsonDecode(response.body);
+
+    while (true) {
+      memeCounter++;
+      bool isVideo =
+          memeJson["data"]["children"][memeCounter]["data"]["is_video"];
+      if (!isVideo) break;
+    }
+
+    setState(() {
+      currentMemeTitle =
+          memeJson["data"]["children"][memeCounter]["data"]["title"];
+      currentMemeImage =
+          memeJson["data"]["children"][memeCounter]["data"]["url"];
+    });
+
+    print(currentMemeImage);
   }
 }
 
