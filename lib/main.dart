@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 //TODO: memes
 
@@ -12,15 +13,23 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return MaterialApp(
       navigatorKey: navigatorKey,
       title: 'Daily and Meme',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
+        textTheme: GoogleFonts.robotoMonoTextTheme(textTheme).copyWith(
+          bodyText1: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
+          bodyText2: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
+          caption: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
+          button: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
+          headline6: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
+        ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(primary: Colors.amber),
         ),
-        // color is useless?
+        // primaryColor is useless?
         primaryColor: Colors.pink,
       ),
       initialRoute: "/",
@@ -64,6 +73,7 @@ Widget buildBottomSheet() {
           tooltip: "Zur Startseite",
           iconSize: 32,
           onPressed: () {
+            // TODO reset global vars
             navigatorKey.currentState?.pushNamed("/");
           },
         ),
@@ -89,9 +99,10 @@ class _HomePageState extends State<HomePage> {
   Widget _buildHomepage() {
     return Column(
       children: [
-        Text("Wie viele Personen nehmen teil?",
-            style: TextStyle(fontSize: myFontSizeMed)),
+        Text("Wie viele Personen nehmen teil?"),
         NumberPicker(
+            selectedTextStyle:
+                TextStyle(fontSize: myFontSizeMed, color: Colors.blueGrey),
             value: nMeetingPersons,
             minValue: 1,
             maxValue: 100,
@@ -100,9 +111,10 @@ class _HomePageState extends State<HomePage> {
             axis: Axis.horizontal,
             onChanged: (newValue) =>
                 setState(() => nMeetingPersons = newValue)),
-        Text("Wie viele Minuten sind insgesamt eingeplant?",
-            style: TextStyle(fontSize: myFontSizeMed)),
+        Text("Wie viele Minuten sind insgesamt eingeplant?"),
         NumberPicker(
+            selectedTextStyle:
+                TextStyle(fontSize: myFontSizeMed, color: Colors.blueGrey),
             value: nMeetingMinutes,
             minValue: 1,
             maxValue: 100,
@@ -120,7 +132,6 @@ class _HomePageState extends State<HomePage> {
             },
             child: Text(
               "Meeting starten",
-              style: TextStyle(fontSize: myFontSizeMed),
             ),
           ),
           padding: EdgeInsets.all(32),
@@ -241,7 +252,6 @@ class _TimerPageState extends State<TimerPage>
       children: [
         Text(
           "Person $currentSpeaker",
-          style: TextStyle(fontSize: myFontSizeMed),
         ),
         Padding(padding: EdgeInsets.all(32)),
         Countdown(
@@ -266,12 +276,10 @@ class _TimerPageState extends State<TimerPage>
                 },
                 child: Text(
                   isTimeStopped ? "Fortsetzen" : "Pause",
-                  style: TextStyle(fontSize: myFontSizeMed),
                 )),
             ElevatedButton(
               child: Text(
                 "Fertig",
-                style: TextStyle(fontSize: myFontSizeMed),
               ),
               onPressed: () => _goToNextSpeaker(),
             ),
@@ -304,7 +312,6 @@ class _TimerPageState extends State<TimerPage>
               ElevatedButton(
                 child: Text(
                   "+30 Sekunden",
-                  style: TextStyle(fontSize: myFontSizeSmall),
                 ),
                 onPressed: () {
                   isExtraTime = true;
@@ -314,7 +321,6 @@ class _TimerPageState extends State<TimerPage>
               ElevatedButton(
                 child: Text(
                   "Fertig",
-                  style: TextStyle(fontSize: myFontSizeSmall),
                 ),
                 onPressed: () => _goToNextSpeaker(),
               ),
@@ -338,7 +344,6 @@ class Countdown extends AnimatedWidget {
     Duration currentDuration = Duration(seconds: timerText);
     return Text(
       "Du hast noch ${currentDuration.inMinutes} Minuten und ${currentDuration.inSeconds.remainder(60)} Sekunden",
-      style: TextStyle(fontSize: myFontSizeMed),
     );
   }
 }
@@ -383,14 +388,12 @@ class _MemePageState extends State<MemePage> {
               onPressed: () => Navigator.pushNamed(context, "work"),
               child: Text(
                 "Ran an die Arbeit!",
-                style: TextStyle(fontSize: myFontSizeMed),
               ),
             ),
             ElevatedButton(
               onPressed: null,
               child: Text(
                 "Noch ein Meme!",
-                style: TextStyle(fontSize: myFontSizeMed),
               ),
             ),
           ],
