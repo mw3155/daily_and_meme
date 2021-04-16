@@ -30,6 +30,10 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       title: 'Daily and Meme',
       theme: ThemeData(
+        backgroundColor: Colors.amber,
+        scaffoldBackgroundColor: Colors.blueGrey,
+        bottomAppBarColor: Colors.amber,
+        dialogBackgroundColor: Colors.blueGrey,
         primarySwatch: Colors.blueGrey,
         textTheme: GoogleFonts.robotoMonoTextTheme(textTheme).copyWith(
           bodyText1: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
@@ -41,8 +45,8 @@ class MyApp extends StatelessWidget {
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(primary: Colors.amber),
         ),
-        // primaryColor is useless?
-        primaryColor: Colors.pink,
+        // primaryColor only for appbar on smartphone?
+        primaryColor: Colors.blueGrey,
       ),
       initialRoute: "/",
       routes: {
@@ -50,6 +54,7 @@ class MyApp extends StatelessWidget {
         "timer": (context) => TimerPage(),
         "meme": (context) => MemePage(),
         "work": (context) => WorkPage(),
+        "zebra": (context) => ZebraPage(),
       },
     );
   }
@@ -60,7 +65,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-// fun global variables
+// global variables are fun
 int nMeetingMinutes = 15;
 int nMeetingPersons = 5;
 Duration durationPerPerson = Duration(seconds: 1);
@@ -77,11 +82,22 @@ double myFontSizeSmall = 16;
 
 Widget buildBottomSheet() {
   return Container(
+    color: Colors.blueGrey,
     padding: EdgeInsets.all(32),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
+          color: Colors.black,
+          tooltip: "Zebra",
+          icon: Icon(Icons.audiotrack),
+          iconSize: 32,
+          onPressed: () {
+            navigatorKey.currentState?.pushNamed("zebra");
+          },
+        ),
+        IconButton(
+          color: Colors.black,
           icon: Icon(Icons.home),
           tooltip: "Zur Startseite",
           iconSize: 32,
@@ -115,7 +131,7 @@ class _HomePageState extends State<HomePage> {
         Text("Wie viele Personen nehmen teil?"),
         NumberPicker(
             selectedTextStyle:
-                TextStyle(fontSize: myFontSizeMed, color: Colors.blueGrey),
+                TextStyle(fontSize: myFontSizeMed, color: Colors.amber),
             value: nMeetingPersons,
             minValue: 1,
             maxValue: 100,
@@ -127,7 +143,7 @@ class _HomePageState extends State<HomePage> {
         Text("Wie viele Minuten sind insgesamt eingeplant?"),
         NumberPicker(
             selectedTextStyle:
-                TextStyle(fontSize: myFontSizeMed, color: Colors.blueGrey),
+                TextStyle(fontSize: myFontSizeMed, color: Colors.amber),
             value: nMeetingMinutes,
             minValue: 1,
             maxValue: 100,
@@ -476,6 +492,38 @@ class WorkPage extends StatelessWidget {
       children: [
         Image.network(
           "https://media.giphy.com/media/jkSvCVEXWlOla/source.gif",
+          width: 1280,
+          fit: BoxFit.fill,
+        ),
+      ],
+    );
+  }
+}
+
+class ZebraPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      // disable going back
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+        bottomSheet: buildBottomSheet(),
+        body: Center(
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            child: _buildZebraPage(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildZebraPage() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.network(
+          "https://media.giphy.com/media/10hO3rDNqqg2Xe/giphy.gif",
           width: 1280,
           fit: BoxFit.fill,
         ),
