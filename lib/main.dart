@@ -83,7 +83,7 @@ double myFontSizeSmall = 16;
 Widget buildBottomSheet() {
   return Container(
     color: Colors.blueGrey,
-    padding: EdgeInsets.all(32),
+    padding: EdgeInsets.all(8),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
