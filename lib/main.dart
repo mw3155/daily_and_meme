@@ -7,7 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 /*
 TODO:
-- memes
+- zebra button
+- deutsche memes
 - timer animation
 - ads
 - hiring
