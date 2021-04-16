@@ -407,26 +407,29 @@ class _MemePageState extends State<MemePage> {
 
   Widget _buildMemePage() {
     if (memeCounter == 0) getNextMeme();
-
-    print(MediaQuery.of(context).size.height);
-    print(myFontSizeMed + 16 + 8 * 2);
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(currentMemeTitle),
-        Expanded(
-          flex: 0,
-          child: Container(
-            child: memeCounter == 0
-                ? Icon(Icons.photo)
-                : Image.network(
-                    currentMemeImage,
-                    height: 600,
-                    fit: BoxFit.scaleDown,
-                  ),
-          ),
-        ),
+        memeCounter == 0
+            ? Icon(Icons.photo)
+            : Image.network(
+                currentMemeImage,
+                //height: 600,
+                height: MediaQuery.of(context).size.height -
+                    (32 +
+                        myFontSizeMed +
+                        0 +
+                        16 +
+                        myFontSizeMed +
+                        32 +
+                        8 +
+                        32 +
+                        8 +
+                        50),
+                // memetitle + padding to buttons + ... + 50 (magic number..)
+                fit: BoxFit.contain,
+              ),
         Padding(padding: EdgeInsets.all(16)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
