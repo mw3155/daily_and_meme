@@ -1,115 +1,3 @@
-/// Flutter code sample for CircularProgressIndicator
-
-// This example shows a [CircularProgressIndicator] with a changing value.
-
-import 'package:flutter/material.dart';
-
-void main() => runApp(const MyApp());
-
-/// This is the main application widget.
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  static const String _title = 'Flutter Code Sample';
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: _title,
-      home: MyStatefulWidget(),
-    );
-  }
-}
-
-/// This is the stateful widget that the main application instantiates.
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
-
-  @override
-  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
-}
-
-/// This is the private State class that goes with MyStatefulWidget.
-/// AnimationControllers can be created with `vsync: this` because of TickerProviderStateMixin.
-class _MyStatefulWidgetState extends State<MyStatefulWidget>
-    with TickerProviderStateMixin {
-  late AnimationController controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 5),
-    )..addListener(() {
-        setState(() {});
-      });
-    //controller.repeat(reverse: true);
-    controller.forward();
-    controller.addStatusListener(
-      (status) {
-        if (status == AnimationStatus.completed) {
-          controller.reverse();
-        } else if (status == AnimationStatus.dismissed) {
-          controller.forward();
-        }
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    print(controller.value);
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Linear progress indicator with a fixed color',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            SizedBox(
-              height: 300,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Container(
-                      height: 300,
-                      width: 300,
-                      child: CircularProgressIndicator(
-                        value: controller.value,
-                        strokeWidth: 10,
-                        semanticsLabel: 'Linear progress indicator',
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Container(
-                      alignment: FractionalOffset.center,
-                      child: Text("hi"),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/*
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -119,9 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 /*
 TODO:
-- zebra button
 - deutsche memes
-- timer animation
 - ads
 - hiring
 - donations
@@ -146,7 +32,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.blueGrey,
         bottomAppBarColor: Colors.amber,
         dialogBackgroundColor: Colors.blueGrey,
-        primarySwatch: Colors.blueGrey,
+        primarySwatch: Colors.amber,
         textTheme: GoogleFonts.robotoMonoTextTheme(textTheme).copyWith(
           bodyText1: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
           bodyText2: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
@@ -162,7 +48,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       routes: {
-        "/": (context) => CircularProgress(),
+        "/": (context) => HomePage(),
         "timer": (context) => TimerPage(),
         "meme": (context) => MemePage(),
         "work": (context) => WorkPage(),
@@ -396,7 +282,7 @@ class _TimerPageState extends State<TimerPage>
           "Person $currentSpeaker",
         ),
         Padding(padding: EdgeInsets.all(32)),
-        Countdown(
+        CountdownClock(
           animation: StepTween(begin: _controller.duration!.inSeconds, end: 0)
               .animate(_controller),
         ),
@@ -474,9 +360,9 @@ class _TimerPageState extends State<TimerPage>
   }
 }
 
-class Countdown extends AnimatedWidget {
+class CountdownClock extends AnimatedWidget {
   // not sure what this key thing does, but "?" seems like a good fix
-  Countdown({Key? key, required this.animation})
+  CountdownClock({Key? key, required this.animation})
       : super(key: key, listenable: animation);
   Animation<int> animation;
 
@@ -484,8 +370,35 @@ class Countdown extends AnimatedWidget {
   Widget build(BuildContext context) {
     int timerText = animation.value;
     Duration currentDuration = Duration(seconds: timerText);
-    return Text(
-      "Du hast noch ${currentDuration.inMinutes} Minuten und ${currentDuration.inSeconds.remainder(60)} Sekunden",
+    int currentMaxTime = (isExtraTime
+        ? durationExtraTime.inSeconds
+        : durationPerPerson.inSeconds);
+
+    double clockSize = 600;
+    return SizedBox(
+      height: clockSize,
+      child: Stack(
+        children: [
+          Center(
+            child: Container(
+              height: clockSize,
+              width: clockSize,
+              child: CircularProgressIndicator(
+                // ugly workaround; would be better to somehow access controller.value
+                value: (currentMaxTime - animation.value) / currentMaxTime,
+                strokeWidth: 10,
+              ),
+            ),
+          ),
+          Center(
+            child: Container(
+              alignment: FractionalOffset.center,
+              child: Text(
+                  "${currentDuration.inMinutes} Min ${currentDuration.inSeconds.remainder(60)} Sek"),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -702,7 +615,7 @@ class _CircularProgressState extends State<CircularProgress>
               style: Theme.of(context).textTheme.headline6,
             ),
             CircularProgressIndicator(
-              value: controller.value,
+              value: controller.value > 0.01 ? controller.value : 0.01,
               semanticsLabel: 'Linear progress indicator',
             ),
           ],
@@ -711,5 +624,3 @@ class _CircularProgressState extends State<CircularProgress>
     );
   }
 }
-
-*/
