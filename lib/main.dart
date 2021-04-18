@@ -8,7 +8,6 @@ import 'package:flag/flag.dart';
 
 /*
 TODO:
-- deutsche memes
 - ads
 - hiring
 - donations
@@ -376,8 +375,7 @@ class CountdownClock extends AnimatedWidget {
         (1 - animation.value) * maxDuration.inSeconds;
     Duration currentDuration = Duration(seconds: currentValueInSeconds.toInt());
 
-    // TODO: make this w mediaquery
-    double clockSize = 600;
+    double clockSize = MediaQuery.of(context).size.shortestSide * 0.6;
 
     return SizedBox(
       height: clockSize,
@@ -388,8 +386,8 @@ class CountdownClock extends AnimatedWidget {
               height: clockSize,
               width: clockSize,
               child: CircularProgressIndicator(
-                // ugly workaround; would be better to somehow access controller.value
-                value: animation.value,
+                // if animation is exactly 0, then drawArc fails
+                value: animation.value > 0.001 ? animation.value : 0.001,
                 strokeWidth: 10,
               ),
             ),
@@ -398,7 +396,7 @@ class CountdownClock extends AnimatedWidget {
             child: Container(
               alignment: FractionalOffset.center,
               child: Text(
-                  "${currentDuration.inMinutes} Min ${currentDuration.inSeconds.remainder(60)} Sek"),
+                  "Du hast noch\n${currentDuration.inMinutes} Min ${currentDuration.inSeconds.remainder(60)} Sek"),
             ),
           ),
         ],
@@ -451,10 +449,11 @@ class _MemePageState extends State<MemePage> {
                 onPressed: () {
                   setState(() {
                     isLanguageGerman ^= true;
+                    memeCounter = 0;
                   });
                 },
                 child: Flag(
-                  isLanguageGerman ? "DE" : "US",
+                  isLanguageGerman ? "US" : "DE",
                   height: 32,
                   width: 32,
                   fit: BoxFit.scaleDown,
@@ -509,7 +508,8 @@ class _MemePageState extends State<MemePage> {
   void getNextMeme() async {
     // get json from programmerhumor and decode it
     String memeSite = "www.reddit.com";
-    String memeSiteEnding = "/r/ProgrammerHumor/top.json";
+    String memeSiteEnding =
+        isLanguageGerman ? "r/ich_iel/top.json" : "/r/ProgrammerHumor/top.json";
     final response = await http.get(Uri.https(memeSite, memeSiteEnding));
 
     Map<String, dynamic> memeJson = jsonDecode(response.body);
@@ -595,61 +595,6 @@ class ZebraPage extends StatelessWidget {
           fit: BoxFit.fill,
         ),
       ],
-    );
-  }
-}
-
-/// This is the stateful widget that the main application instantiates.
-class CircularProgress extends StatefulWidget {
-  const CircularProgress({Key? key}) : super(key: key);
-
-  @override
-  _CircularProgressState createState() => _CircularProgressState();
-}
-
-/// This is the private State class that goes with CircularProgress.
-/// AnimationControllers can be created with `vsync: this` because of TickerProviderStateMixin.
-class _CircularProgressState extends State<CircularProgress>
-    with TickerProviderStateMixin {
-  late AnimationController controller;
-
-  @override
-  void initState() {
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 5),
-    )..addListener(() {
-        setState(() {});
-      });
-    controller.repeat(reverse: true);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text(
-              'Linear progress indicator with a fixed color',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            CircularProgressIndicator(
-              value: controller.value > 0.01 ? controller.value : 0.01,
-              semanticsLabel: 'Linear progress indicator',
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
