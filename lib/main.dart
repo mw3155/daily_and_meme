@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flag/flag.dart';
 
 /*
 TODO:
@@ -71,12 +72,14 @@ int currentSpeaker = 0;
 bool isTimeStopped = false;
 Duration durationExtraTime = Duration(seconds: 30);
 bool isExtraTime = false;
-int memeCounter = 0;
 // styling
 Color color1 = Color(0xff004489);
 Color color2 = Color(0xffF9B200);
 double myFontSizeMed = 32;
 double myFontSizeSmall = 16;
+// meme stuff
+int memeCounter = 0;
+bool isLanguageGerman = false;
 
 Widget buildBottomSheet() {
   return Container(
@@ -419,8 +422,6 @@ class _MemePageState extends State<MemePage> {
         bottomSheet: buildBottomSheet(),
         body: Center(
           child: Container(
-            height: 1080,
-            width: 1280,
             padding: const EdgeInsets.all(32),
             child: _buildMemePage(),
           ),
@@ -437,7 +438,31 @@ class _MemePageState extends State<MemePage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(currentMemeTitle),
+        Stack(
+          children: [
+            Container(
+              alignment: FractionalOffset.center,
+              child: Text(currentMemeTitle),
+            ),
+            Container(
+              alignment: FractionalOffset.centerRight,
+              child: TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.white70),
+                onPressed: () {
+                  setState(() {
+                    isLanguageGerman ^= true;
+                  });
+                },
+                child: Flag(
+                  isLanguageGerman ? "DE" : "US",
+                  height: 32,
+                  width: 32,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+            ),
+          ],
+        ),
         memeCounter == 0
             ? Icon(Icons.photo)
             : Image.network(
