@@ -518,7 +518,10 @@ class _MemePageState extends State<MemePage> {
       memeCounter++;
       bool isVideo =
           memeJson["data"]["children"][memeCounter]["data"]["is_video"];
-      if (!isVideo) break;
+      if (!isVideo &&
+          memeJson["data"]["children"][memeCounter]["data"]
+                  ["thumbnail_height"] !=
+              null) break;
     }
 
     setState(() {
