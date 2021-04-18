@@ -283,8 +283,8 @@ class _TimerPageState extends State<TimerPage>
         ),
         Padding(padding: EdgeInsets.all(32)),
         CountdownClock(
-          animation: StepTween(begin: _controller.duration!.inSeconds, end: 0)
-              .animate(_controller),
+          animation: CurvedAnimation(parent: _controller, curve: Curves.linear),
+          maxDuration: _controller.duration!,
         ),
         Padding(padding: EdgeInsets.all(32)),
         Row(
@@ -362,19 +362,20 @@ class _TimerPageState extends State<TimerPage>
 
 class CountdownClock extends AnimatedWidget {
   // not sure what this key thing does, but "?" seems like a good fix
-  CountdownClock({Key? key, required this.animation})
+  CountdownClock({Key? key, required this.animation, required this.maxDuration})
       : super(key: key, listenable: animation);
-  Animation<int> animation;
+  Animation<double> animation;
+  Duration maxDuration;
 
   @override
   Widget build(BuildContext context) {
-    int timerText = animation.value;
-    Duration currentDuration = Duration(seconds: timerText);
-    int currentMaxTime = (isExtraTime
-        ? durationExtraTime.inSeconds
-        : durationPerPerson.inSeconds);
+    double currentValueInSeconds =
+        (1 - animation.value) * maxDuration.inSeconds;
+    Duration currentDuration = Duration(seconds: currentValueInSeconds.toInt());
 
+    // TODO: make this w mediaquery
     double clockSize = 600;
+
     return SizedBox(
       height: clockSize,
       child: Stack(
@@ -385,7 +386,7 @@ class CountdownClock extends AnimatedWidget {
               width: clockSize,
               child: CircularProgressIndicator(
                 // ugly workaround; would be better to somehow access controller.value
-                value: (currentMaxTime - animation.value) / currentMaxTime,
+                value: animation.value,
                 strokeWidth: 10,
               ),
             ),
