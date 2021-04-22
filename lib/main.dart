@@ -5,14 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flag/flag.dart';
-
-/*
-TODO:
-- ads
-- hiring
-- donations
-- proversion
-*/
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MyApp());
@@ -79,6 +72,7 @@ double myFontSizeSmall = 16;
 // meme stuff
 int memeCounter = 0;
 bool isLanguageGerman = false;
+String githubURL = "https://github.com/mw3155/DailyAndMeme";
 
 Widget buildBottomSheet() {
   return Container(
@@ -104,6 +98,17 @@ Widget buildBottomSheet() {
           onPressed: () {
             // TODO reset global vars
             navigatorKey.currentState?.pushNamed("/");
+          },
+        ),
+        IconButton(
+          color: Colors.black,
+          icon: Icon(Icons.pest_control),
+          tooltip: "Github",
+          iconSize: 32,
+          onPressed: () async {
+            await canLaunch(githubURL)
+                ? await launch(githubURL)
+                : throw 'Could not launch $githubURL';
           },
         ),
       ],

@@ -31,6 +31,7 @@ dependencies:
   numberpicker: ^2.1.1
   google_fonts: ^2.0.0
   flag: ^5.0.0-nullsafety
+  url_launcher: ^6.0.3
 
 dev_dependencies:
   flutter_test:
