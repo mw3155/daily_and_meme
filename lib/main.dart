@@ -392,7 +392,9 @@ class CountdownClock extends AnimatedWidget {
               width: clockSize,
               child: CircularProgressIndicator(
                 // if animation is exactly 0, then drawArc fails
-                value: animation.value > 0.001 ? animation.value : 0.001,
+                value: (1 - animation.value) > 0.001
+                    ? (1 - animation.value)
+                    : 0.001,
                 strokeWidth: 10,
               ),
             ),
