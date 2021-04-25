@@ -20,25 +20,32 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: navigatorKey,
       title: 'Daily and Meme',
-      theme: ThemeData(
-        backgroundColor: Colors.amber,
-        scaffoldBackgroundColor: Colors.blueGrey,
-        bottomAppBarColor: Colors.amber,
-        dialogBackgroundColor: Colors.blueGrey,
-        primarySwatch: Colors.amber,
-        textTheme: GoogleFonts.robotoMonoTextTheme(textTheme).copyWith(
-          bodyText1: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
-          bodyText2: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
-          caption: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
-          button: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
-          headline6: GoogleFonts.robotoMono(fontSize: myFontSizeMed),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(primary: Colors.amber),
-        ),
-        // primaryColor only for appbar on smartphone?
-        primaryColor: Colors.blueGrey,
-      ),
+      builder: (context, child) {
+        double myResponsiveFontSize =
+            MediaQuery.of(context).size.height / myFontSizeScaleFactor;
+        return Theme(
+          data: ThemeData(
+            backgroundColor: Colors.amber,
+            scaffoldBackgroundColor: Colors.blueGrey,
+            bottomAppBarColor: Colors.amber,
+            dialogBackgroundColor: Colors.blueGrey,
+            primarySwatch: Colors.amber,
+            textTheme: GoogleFonts.robotoMonoTextTheme(textTheme).copyWith(
+              bodyText1: GoogleFonts.robotoMono(fontSize: myResponsiveFontSize),
+              bodyText2: GoogleFonts.robotoMono(fontSize: myResponsiveFontSize),
+              caption: GoogleFonts.robotoMono(fontSize: myResponsiveFontSize),
+              button: GoogleFonts.robotoMono(fontSize: myResponsiveFontSize),
+              headline6: GoogleFonts.robotoMono(fontSize: myResponsiveFontSize),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(primary: Colors.amber),
+            ),
+            // primaryColor only for appbar on smartphone?
+            primaryColor: Colors.blueGrey,
+          ),
+          child: child!,
+        );
+      },
       initialRoute: "/",
       routes: {
         "/": (context) => HomePage(),
@@ -67,8 +74,8 @@ bool isExtraTime = false;
 // styling
 Color color1 = Color(0xff004489);
 Color color2 = Color(0xffF9B200);
-double myFontSizeMed = 32;
-double myFontSizeSmall = 16;
+// gets overwritten by mediaquery
+double myFontSizeScaleFactor = 30;
 // meme stuff
 int memeCounter = 0;
 bool isLanguageGerman = false;
@@ -131,12 +138,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildHomepage() {
+    double myResponsiveFontSize =
+        MediaQuery.of(context).size.height / myFontSizeScaleFactor;
     return Column(
       children: [
         Text("Wie viele Personen nehmen teil?"),
         NumberPicker(
             selectedTextStyle:
-                TextStyle(fontSize: myFontSizeMed, color: Colors.amber),
+                TextStyle(fontSize: myResponsiveFontSize, color: Colors.amber),
             value: nMeetingPersons,
             minValue: 1,
             maxValue: 100,
@@ -147,8 +156,10 @@ class _HomePageState extends State<HomePage> {
                 setState(() => nMeetingPersons = newValue)),
         Text("Wie viele Minuten sind insgesamt eingeplant?"),
         NumberPicker(
-            selectedTextStyle:
-                TextStyle(fontSize: myFontSizeMed, color: Colors.amber),
+            selectedTextStyle: TextStyle(
+              fontSize: myResponsiveFontSize,
+              color: Colors.amber,
+            ),
             value: nMeetingMinutes,
             minValue: 1,
             maxValue: 100,
@@ -450,7 +461,7 @@ class _MemePageState extends State<MemePage> {
               child: Text(currentMemeTitle),
             ),
             Container(
-              alignment: FractionalOffset.centerRight,
+              alignment: FractionalOffset.bottomRight,
               child: TextButton(
                 style: TextButton.styleFrom(backgroundColor: Colors.white70),
                 onPressed: () {
@@ -475,16 +486,7 @@ class _MemePageState extends State<MemePage> {
                 currentMemeImage,
                 //height: 600,
                 height: MediaQuery.of(context).size.height -
-                    (32 +
-                        myFontSizeMed +
-                        0 +
-                        16 +
-                        myFontSizeMed +
-                        32 +
-                        8 +
-                        32 +
-                        8 +
-                        50),
+                    (32 + 32 + 0 + 16 + 32 + 32 + 8 + 32 + 8 + 50),
                 // memetitle + padding to buttons + ... + 50 (magic number..)
                 fit: BoxFit.contain,
               ),
