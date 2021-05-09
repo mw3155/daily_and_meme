@@ -3,6 +3,8 @@
 Contributions welcome!
 
 TODO:
+* like and share buttons
+* goto comments
 * annoying sounds
 * shuffle persons
 * annoying ads

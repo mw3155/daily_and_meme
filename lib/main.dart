@@ -65,7 +65,6 @@ class HomePage extends StatefulWidget {
 
 // global variables are fun
 int nMeetingMinutes = 15;
-int nMeetingPersons = 5;
 Duration durationPerPerson = Duration(seconds: 1);
 int currentSpeaker = 0;
 bool isTimeStopped = false;
@@ -80,6 +79,14 @@ double myFontSizeScaleFactor = 30;
 int memeCounter = 0;
 bool isLanguageGerman = false;
 String githubURL = "https://github.com/mw3155/DailyAndMeme";
+
+List<String> meetingPersons = [
+  "Sebastian",
+  "Florian",
+  "Markus",
+  "Thomas",
+  "Alex"
+];
 
 Widget buildBottomSheet() {
   return Container(
@@ -140,21 +147,58 @@ class _HomePageState extends State<HomePage> {
   Widget _buildHomepage() {
     double myResponsiveFontSize =
         MediaQuery.of(context).size.height / myFontSizeScaleFactor;
+
     return Column(
+      //crossAxisAlignment: CrossAxisAlignment.center, // no effect?
       children: [
-        Text("Wie viele Personen nehmen teil?"),
-        NumberPicker(
-            selectedTextStyle:
-                TextStyle(fontSize: myResponsiveFontSize, color: Colors.amber),
-            value: nMeetingPersons,
-            minValue: 1,
-            maxValue: 100,
-            step: 1,
-            haptics: true,
-            axis: Axis.horizontal,
-            onChanged: (newValue) =>
-                setState(() => nMeetingPersons = newValue)),
-        Text("Wie viele Minuten sind insgesamt eingeplant?"),
+        Text(
+          "Teilnehmer:",
+          textAlign: TextAlign.left,
+        ),
+        SizedBox(
+          //height: MediaQuery.of(context).size.height * 0.4,
+          width: MediaQuery.of(context).size.width * 0.3,
+          child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: meetingPersons.length,
+            itemBuilder: (context, index) {
+              final item = meetingPersons[index];
+              return Dismissible(
+                // Each Dismissible must contain a Key. Keys allow Flutter to
+                // uniquely identify widgets.
+                key: Key(item),
+                // Provide a function that tells the app
+                // what to do after an item has been swiped away.
+                onDismissed: (direction) {
+                  // Remove the item from the data source.
+                  setState(() {
+                    meetingPersons.removeAt(index);
+                  });
+
+                  // Then show a snackbar.
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text("RIP $item")));
+                },
+                // Show a red background as the item is swiped away.
+                background: Container(color: Colors.red),
+                child: ListTile(
+                  title: Text(
+                    //TextStyle(fontSize: myResponsiveFontSize, color: Colors.amber),
+                    '$item',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: myResponsiveFontSize * 0.7,
+                      color: Colors.amber,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        Padding(padding: EdgeInsets.all(32)),
+        Text("Gesamtdauer (Minuten):"),
         NumberPicker(
             selectedTextStyle: TextStyle(
               fontSize: myResponsiveFontSize,
@@ -168,18 +212,17 @@ class _HomePageState extends State<HomePage> {
             axis: Axis.horizontal,
             onChanged: (newValue) =>
                 setState(() => nMeetingMinutes = newValue)),
-        Padding(
-          child: ElevatedButton(
-            onPressed: () {
-              int nSecondsPerPerson = nMeetingMinutes * 60 ~/ nMeetingPersons;
-              durationPerPerson = Duration(seconds: nSecondsPerPerson);
-              _showConfirmDialog();
-            },
-            child: Text(
-              "Meeting starten",
-            ),
+        Padding(padding: EdgeInsets.all(32)),
+        ElevatedButton(
+          onPressed: () {
+            int nSecondsPerPerson =
+                nMeetingMinutes * 60 ~/ meetingPersons.length;
+            durationPerPerson = Duration(seconds: nSecondsPerPerson);
+            _showConfirmDialog();
+          },
+          child: Text(
+            "Meeting starten",
           ),
-          padding: EdgeInsets.all(32),
         ),
       ],
       mainAxisAlignment: MainAxisAlignment.center,
@@ -193,7 +236,7 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-              'Es gibt $nMeetingPersons Teilnehmer\nJeder hat eine Redezeit von ${durationPerPerson.inMinutes} Minuten und ${durationPerPerson.inSeconds.remainder(60)} Sekunden.'),
+              'Es gibt ${meetingPersons.length} Teilnehmer\nJeder hat eine Redezeit von ${durationPerPerson.inMinutes} Minuten und ${durationPerPerson.inSeconds.remainder(60)} Sekunden.'),
           content: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -208,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                   ElevatedButton(
                       child: Text('Starten'),
                       onPressed: () {
-                        currentSpeaker = 1;
+                        currentSpeaker = 0;
                         Navigator.pushNamed(context, "timer");
                       }),
                 ],
@@ -246,6 +289,7 @@ class _TimerPageState extends State<TimerPage>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    print(meetingPersons);
     return WillPopScope(
       // disable going back
       onWillPop: () => Future.value(false),
@@ -293,11 +337,16 @@ class _TimerPageState extends State<TimerPage>
   }
 
   Widget _buildTimerPage() {
+    // BUG: before memepage, flutter builds a timerpage again with speaker > meetingPersons; idk why...
+    String speakerName = meetingPersons.length <= currentSpeaker
+        ? "null"
+        : meetingPersons[currentSpeaker];
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Person $currentSpeaker",
+          "$speakerName",
         ),
         Padding(padding: EdgeInsets.all(32)),
         CountdownClock(
@@ -338,7 +387,9 @@ class _TimerPageState extends State<TimerPage>
   void _goToNextSpeaker() {
     isExtraTime = false;
     currentSpeaker++;
-    currentSpeaker > nMeetingPersons
+    print(meetingPersons.length);
+    print(currentSpeaker);
+    currentSpeaker >= meetingPersons.length
         ? Navigator.pushNamed(context, "meme")
         : Navigator.pushNamed(context, "timer");
   }
