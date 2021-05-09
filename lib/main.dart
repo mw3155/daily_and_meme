@@ -87,6 +87,7 @@ List<String> meetingPersons = [
   "Thomas",
   "Alex"
 ];
+String newMeetingPerson = "";
 
 Widget buildBottomSheet() {
   return Container(
@@ -196,6 +197,31 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.1,
+          width: MediaQuery.of(context).size.height * 0.2,
+          child: TextField(
+            onChanged: (String newName) {
+              // TODO: this seems like a hack, how to do better?
+              newMeetingPerson = newName;
+            },
+            onSubmitted: (value) {
+              setState(() {
+                meetingPersons.add(newMeetingPerson);
+              });
+            },
+            decoration: InputDecoration(
+              border: UnderlineInputBorder(),
+              labelText: 'Neuer Teilnehmer',
+            ),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            meetingPersons.shuffle();
+          },
+          child: Icon(Icons.shuffle),
         ),
         Padding(padding: EdgeInsets.all(32)),
         Text("Gesamtdauer (Minuten):"),
