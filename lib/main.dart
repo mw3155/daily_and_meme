@@ -322,7 +322,9 @@ class _TimerPageState extends State<TimerPage>
       child: Scaffold(
         bottomSheet: buildBottomSheet(),
         body: Center(
-          child: Container(
+          child: AnimatedContainer(
+            duration: Duration(seconds: 1),
+            color: isTimeStopped ? Colors.black : Colors.blueGrey,
             padding: const EdgeInsets.all(32),
             child: _buildTimerPage(),
           ),
@@ -402,7 +404,9 @@ class _TimerPageState extends State<TimerPage>
               child: Text(
                 "Fertig",
               ),
-              onPressed: () => _goToNextSpeaker(),
+              onPressed: () {
+                _goToNextSpeaker();
+              },
             ),
           ],
         )
@@ -412,6 +416,7 @@ class _TimerPageState extends State<TimerPage>
 
   void _goToNextSpeaker() {
     isExtraTime = false;
+    isTimeStopped = false;
     currentSpeaker++;
     print(meetingPersons.length);
     print(currentSpeaker);
