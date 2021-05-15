@@ -73,6 +73,7 @@ bool isExtraTime = false;
 // styling
 Color color1 = Color(0xff004489);
 Color color2 = Color(0xffF9B200);
+Color colorPaused = Colors.black;
 // gets overwritten by mediaquery
 double myFontSizeScaleFactor = 30;
 // meme stuff
@@ -90,8 +91,9 @@ List<String> meetingPersons = [
 String newMeetingPerson = "";
 
 Widget buildBottomSheet() {
-  return Container(
-    color: Colors.blueGrey,
+  return AnimatedContainer(
+    duration: Duration(seconds: 1),
+    color: isTimeStopped ? colorPaused : Colors.blueGrey,
     padding: EdgeInsets.all(8),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -315,7 +317,6 @@ class _TimerPageState extends State<TimerPage>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    print(meetingPersons);
     return WillPopScope(
       // disable going back
       onWillPop: () => Future.value(false),
@@ -324,7 +325,7 @@ class _TimerPageState extends State<TimerPage>
         body: Center(
           child: AnimatedContainer(
             duration: Duration(seconds: 1),
-            color: isTimeStopped ? Colors.black : Colors.blueGrey,
+            color: isTimeStopped ? colorPaused : Colors.blueGrey,
             padding: const EdgeInsets.all(32),
             child: _buildTimerPage(),
           ),
@@ -370,46 +371,59 @@ class _TimerPageState extends State<TimerPage>
         ? "null"
         : meetingPersons[currentSpeaker];
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
       children: [
-        Text(
-          "$speakerName",
-        ),
-        Padding(padding: EdgeInsets.all(32)),
-        CountdownClock(
-          animation: CurvedAnimation(parent: _controller, curve: Curves.linear),
-          maxDuration: _controller.duration!,
-        ),
-        Padding(padding: EdgeInsets.all(32)),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    if (isTimeStopped) {
-                      isTimeStopped = false;
-                      _controller.forward();
-                    } else {
-                      isTimeStopped = true;
-                      _controller.stop();
-                    }
-                  });
-                },
+        TweenAnimationBuilder(
+            tween: Tween<double>(begin: 0, end: 100),
+            duration: Duration(seconds: 3),
+            builder: (_, double i, __) {
+              return Positioned(
+                left: i,
                 child: Text(
-                  isTimeStopped ? "Fortsetzen" : "Pause",
-                )),
-            ElevatedButton(
-              child: Text(
-                "Fertig",
-              ),
-              onPressed: () {
-                _goToNextSpeaker();
-              },
+                  "$speakerName",
+                ),
+              );
+            }),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(padding: EdgeInsets.all(32)),
+            CountdownClock(
+              animation:
+                  CurvedAnimation(parent: _controller, curve: Curves.linear),
+              maxDuration: _controller.duration!,
             ),
+            Padding(padding: EdgeInsets.all(32)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        if (isTimeStopped) {
+                          isTimeStopped = false;
+                          _controller.forward();
+                        } else {
+                          isTimeStopped = true;
+                          _controller.stop();
+                        }
+                      });
+                    },
+                    child: Text(
+                      isTimeStopped ? "Fortsetzen" : "Pause",
+                    )),
+                ElevatedButton(
+                  child: Text(
+                    "Fertig",
+                  ),
+                  onPressed: () {
+                    _goToNextSpeaker();
+                  },
+                ),
+              ],
+            )
           ],
-        )
+        ),
       ],
     );
   }
