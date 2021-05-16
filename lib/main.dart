@@ -66,7 +66,7 @@ class HomePage extends StatefulWidget {
 int nMeetingMinutes = 15;
 Duration durationPerPerson = Duration(seconds: 1);
 int currentSpeaker = 0;
-bool isTimeStopped = false;
+bool isTimePaused = false;
 Duration durationExtraTime = Duration(seconds: 30);
 bool isExtraTime = false;
 // styling
@@ -89,7 +89,7 @@ String newMeetingPerson = "";
 Widget buildBottomSheet() {
   return AnimatedContainer(
     duration: Duration(seconds: 1),
-    color: isTimeStopped ? colorPaused : Colors.blueGrey,
+    color: isTimePaused ? colorPaused : Colors.blueGrey,
     padding: EdgeInsets.all(8),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -220,7 +220,9 @@ class _HomePageState extends State<HomePage> {
         ),
         ElevatedButton(
           onPressed: () {
-            meetingPersons.shuffle();
+            setState(() {
+              meetingPersons.shuffle();
+            });
           },
           child: Icon(Icons.shuffle),
         ),
@@ -318,7 +320,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
         body: Center(
           child: AnimatedContainer(
             duration: Duration(seconds: 1),
-            color: isTimeStopped ? colorPaused : Colors.blueGrey,
+            color: isTimePaused ? colorPaused : Colors.blueGrey,
             padding: const EdgeInsets.all(32),
             child: _buildTimerPage(),
           ),
@@ -330,6 +332,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   late AnimationController _controller;
   late Animation<double> animation;
   late Tween<double> tween;
+  bool isDismissed = false;
 
   @override
   void initState() {
@@ -372,8 +375,10 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
 
     int totalSeconds = _controller.duration!.inSeconds;
 
-    double mediaHeight = MediaQuery.of(context).size.height - magicNumberForMemeHeight + 90;
-    double stepSizePerSecond = mediaHeight / totalSeconds;
+    double memeHeight = MediaQuery.of(context).size.height -
+        magicNumberForMemeHeight +
+        90; // magic number + another magic number == :)
+    double stepSizePerSecond = memeHeight / totalSeconds;
 
     return Column(
       children: [
@@ -388,20 +393,31 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                 builder: (context, child) {
                   Duration durationLeft = Duration(seconds: totalSeconds - animation.value.toInt());
                   return Positioned(
-                    top: animation.value * stepSizePerSecond,
+                    top: isDismissed ? memeHeight : animation.value * stepSizePerSecond,
                     child: AnimatedContainer(
                       duration: Duration(seconds: 1),
-                      color: isTimeStopped ? colorPaused : Colors.blueGrey,
+                      color: isTimePaused ? colorPaused : Colors.blueGrey,
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
-                      child: Container(
-                        alignment: Alignment.topCenter,
-                        child: Text(
-                          "${speakerName}, "
-                          "du hast noch ${durationLeft.inMinutes} Min "
-                          "${durationLeft.inSeconds.remainder(60)} Sek",
-                          style: TextStyle(color: Colors.amber),
-                        ),
+                      child: Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              "${speakerName}, "
+                              "du hast noch ${durationLeft.inMinutes} Min "
+                              "${durationLeft.inSeconds.remainder(60)} Sek",
+                              style: TextStyle(color: Colors.amber),
+                            ),
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  isDismissed = true;
+                                });
+                              },
+                              child: Icon(Icons.arrow_downward)),
+                        ],
                       ),
                     ),
                   );
@@ -414,19 +430,18 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
           children: [
             ElevatedButton(
                 onPressed: () {
-                  // TODO: do not build new meme here
                   setState(() {
-                    if (isTimeStopped) {
-                      isTimeStopped = false;
+                    if (isTimePaused) {
+                      isTimePaused = false;
                       _controller.forward();
                     } else {
-                      isTimeStopped = true;
+                      isTimePaused = true;
                       _controller.stop();
                     }
                   });
                 },
                 child: Text(
-                  isTimeStopped ? "Fortsetzen" : "Pause",
+                  isTimePaused ? "Fortsetzen" : "Pause",
                 )),
             ElevatedButton(
               child: Text(
@@ -445,7 +460,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   void _goToNextSpeaker() {
     memeCounter++;
     isExtraTime = false;
-    isTimeStopped = false;
+    isTimePaused = false;
     currentSpeaker++;
 
     currentSpeaker >= meetingPersons.length
@@ -698,9 +713,8 @@ Widget _buildMemeTitleAndImage(BuildContext context) {
   return Column(
     children: [
       Container(
-        alignment: Alignment.centerLeft,
-        child: Text(currentMemeTitle +
-            "xxxx xxx xxxx xx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx x x x xxxx x xx x x"),
+        alignment: Alignment.center,
+        child: Text(currentMemeTitle),
       ),
       Image.network(
         currentMemeImage,
