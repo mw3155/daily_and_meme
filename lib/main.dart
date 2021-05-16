@@ -21,8 +21,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       title: 'Daily and Meme',
       builder: (context, child) {
-        double myResponsiveFontSize =
-            MediaQuery.of(context).size.height / myFontSizeScaleFactor;
+        double myResponsiveFontSize = MediaQuery.of(context).size.height / myFontSizeScaleFactor;
         return Theme(
           data: ThemeData(
             backgroundColor: Colors.amber,
@@ -81,13 +80,7 @@ int memeCounter = 0;
 bool isLanguageGerman = false;
 String githubURL = "https://github.com/mw3155/DailyAndMeme";
 
-List<String> meetingPersons = [
-  "Sebastian",
-  "Florian",
-  "Markus",
-  "Thomas",
-  "Alex"
-];
+List<String> meetingPersons = ["Sebastian", "Florian", "Markus", "Thomas", "Alex"];
 String newMeetingPerson = "";
 
 Widget buildBottomSheet() {
@@ -148,8 +141,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildHomepage() {
-    double myResponsiveFontSize =
-        MediaQuery.of(context).size.height / myFontSizeScaleFactor;
+    double myResponsiveFontSize = MediaQuery.of(context).size.height / myFontSizeScaleFactor;
 
     return Column(
       //crossAxisAlignment: CrossAxisAlignment.center, // no effect?
@@ -180,8 +172,12 @@ class _HomePageState extends State<HomePage> {
                   });
 
                   // Then show a snackbar.
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text("RIP $item")));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("RIP $item"),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
                 },
                 // Show a red background as the item is swiped away.
                 background: Container(color: Colors.red),
@@ -238,13 +234,11 @@ class _HomePageState extends State<HomePage> {
             step: 1,
             haptics: true,
             axis: Axis.horizontal,
-            onChanged: (newValue) =>
-                setState(() => nMeetingMinutes = newValue)),
+            onChanged: (newValue) => setState(() => nMeetingMinutes = newValue)),
         Padding(padding: EdgeInsets.all(32)),
         ElevatedButton(
           onPressed: () {
-            int nSecondsPerPerson =
-                nMeetingMinutes * 60 ~/ meetingPersons.length;
+            int nSecondsPerPerson = nMeetingMinutes * 60 ~/ meetingPersons.length;
             durationPerPerson = Duration(seconds: nSecondsPerPerson);
             _showConfirmDialog();
           },
@@ -274,8 +268,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text("Abbrechen")),
+                      onPressed: () => Navigator.of(context).pop(), child: Text("Abbrechen")),
                   ElevatedButton(
                       child: Text('Starten'),
                       onPressed: () {
@@ -294,9 +287,7 @@ class _HomePageState extends State<HomePage> {
   void updateIsSelectedList(int index, List<bool> isSelected) {
     setState(
       () {
-        for (int buttonIndex = 0;
-            buttonIndex < isSelected.length;
-            buttonIndex++) {
+        for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
           if (buttonIndex == index) {
             isSelected[buttonIndex] = true;
           } else {
@@ -313,8 +304,7 @@ class TimerPage extends StatefulWidget {
   _TimerPageState createState() => _TimerPageState();
 }
 
-class _TimerPageState extends State<TimerPage>
-    with SingleTickerProviderStateMixin {
+class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -367,12 +357,22 @@ class _TimerPageState extends State<TimerPage>
 
   Widget _buildTimerPage() {
     // BUG: before memepage, flutter builds a timerpage again with speaker > meetingPersons; idk why...
-    String speakerName = meetingPersons.length <= currentSpeaker
-        ? "null"
-        : meetingPersons[currentSpeaker];
+    String speakerName =
+        meetingPersons.length <= currentSpeaker ? "null" : meetingPersons[currentSpeaker];
 
     return Stack(
       children: [
+        Container(
+          alignment: Alignment.topCenter,
+          child: Image.network(
+            "https://i.redd.it/eggo2nhj2cz61.png",
+            //height: 600,
+            height:
+                MediaQuery.of(context).size.height - (32 + 32 + 0 + 16 + 32 + 32 + 8 + 32 + 8 + 50),
+            // memetitle + padding to buttons + ... + 50 (magic number..)
+            fit: BoxFit.contain,
+          ),
+        ),
         TweenAnimationBuilder(
             tween: Tween<double>(begin: 0, end: 100),
             duration: Duration(seconds: 3),
@@ -389,8 +389,7 @@ class _TimerPageState extends State<TimerPage>
           children: [
             Padding(padding: EdgeInsets.all(32)),
             CountdownClock(
-              animation:
-                  CurvedAnimation(parent: _controller, curve: Curves.linear),
+              animation: CurvedAnimation(parent: _controller, curve: Curves.linear),
               maxDuration: _controller.duration!,
             ),
             Padding(padding: EdgeInsets.all(32)),
@@ -483,8 +482,7 @@ class CountdownClock extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    double currentValueInSeconds =
-        (1 - animation.value) * maxDuration.inSeconds;
+    double currentValueInSeconds = (1 - animation.value) * maxDuration.inSeconds;
     Duration currentDuration = Duration(seconds: currentValueInSeconds.toInt());
 
     double clockSize = MediaQuery.of(context).size.shortestSide * 0.6;
@@ -499,9 +497,7 @@ class CountdownClock extends AnimatedWidget {
               width: clockSize,
               child: CircularProgressIndicator(
                 // if animation is exactly 0, then drawArc fails
-                value: (1 - animation.value) > 0.001
-                    ? (1 - animation.value)
-                    : 0.001,
+                value: (1 - animation.value) > 0.001 ? (1 - animation.value) : 0.001,
                 strokeWidth: 10,
               ),
             ),
@@ -550,14 +546,16 @@ class _MemePageState extends State<MemePage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Stack(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              alignment: FractionalOffset.center,
-              child: Text(currentMemeTitle),
+              alignment: FractionalOffset.centerLeft,
+              child: Text(currentMemeTitle +
+                  "dsasalajf lkds jflkds jflkdsa jflkdsa jflkdsa jflkdsa jflkdsa j lkdsajflkdsafjsa"),
             ),
             Container(
-              alignment: FractionalOffset.bottomRight,
+              alignment: Alignment.centerRight,
               child: TextButton(
                 style: TextButton.styleFrom(backgroundColor: Colors.white70),
                 onPressed: () {
@@ -580,7 +578,6 @@ class _MemePageState extends State<MemePage> {
             ? Icon(Icons.photo)
             : Image.network(
                 currentMemeImage,
-                //height: 600,
                 height: MediaQuery.of(context).size.height -
                     (32 + 32 + 0 + 16 + 32 + 32 + 8 + 32 + 8 + 50),
                 // memetitle + padding to buttons + ... + 50 (magic number..)
@@ -613,27 +610,23 @@ class _MemePageState extends State<MemePage> {
   void getNextMeme() async {
     // get json from programmerhumor and decode it
     String memeSite = "www.reddit.com";
-    String memeSiteEnding =
-        isLanguageGerman ? "r/ich_iel/top.json" : "/r/ProgrammerHumor/top.json";
+    String memeSiteEnding = isLanguageGerman ? "r/ich_iel/top.json" : "/r/ProgrammerHumor/top.json";
     final response = await http.get(Uri.https(memeSite, memeSiteEnding));
 
     Map<String, dynamic> memeJson = jsonDecode(response.body);
 
     while (true) {
       memeCounter++;
-      bool isVideo =
-          memeJson["data"]["children"][memeCounter]["data"]["is_video"];
-      if (!isVideo &&
-          memeJson["data"]["children"][memeCounter]["data"]
-                  ["thumbnail_height"] !=
-              null) break;
+      bool isVideo = memeJson["data"]["children"][memeCounter]["data"]["is_video"];
+      bool hasHeight =
+          memeJson["data"]["children"][memeCounter]["data"]["thumbnail_height"] != null;
+      bool isGifv = memeJson["data"]["children"][memeCounter]["data"]["url"].contains(".gifv");
+      if (!isVideo && hasHeight && !isGifv) break;
     }
 
     setState(() {
-      currentMemeTitle =
-          memeJson["data"]["children"][memeCounter]["data"]["title"];
-      currentMemeImage =
-          memeJson["data"]["children"][memeCounter]["data"]["url"];
+      currentMemeTitle = memeJson["data"]["children"][memeCounter]["data"]["title"];
+      currentMemeImage = memeJson["data"]["children"][memeCounter]["data"]["url"];
     });
 
     print(currentMemeImage);
