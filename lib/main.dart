@@ -76,7 +76,10 @@ Color colorPaused = Colors.black;
 // gets overwritten by mediaquery
 double myFontSizeScaleFactor = 30;
 // meme stuff
+int magicNumberForMemeHeight = 32 + 32 + 0 + 16 + 32 + 32 + 8 + 32 + 8 + 100;
 int memeCounter = 0;
+String currentMemeTitle = "";
+String currentMemeImage = "";
 bool isLanguageGerman = false;
 String githubURL = "https://github.com/mw3155/DailyAndMeme";
 
@@ -325,17 +328,24 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   }
 
   late AnimationController _controller;
+  late Animation<double> animation;
+  late Tween<double> tween;
 
   @override
   void initState() {
     super.initState();
 
+    Duration currentDuration = isExtraTime
+        ? Duration(seconds: durationExtraTime.inSeconds)
+        : Duration(seconds: durationPerPerson.inSeconds);
+
     _controller = AnimationController(
       vsync: this,
-      duration: isExtraTime
-          ? Duration(seconds: durationExtraTime.inSeconds)
-          : Duration(seconds: durationPerPerson.inSeconds),
+      duration: currentDuration,
     );
+    tween = Tween(begin: 0, end: currentDuration.inSeconds.toDouble());
+    animation = tween.animate(_controller);
+
     _controller.forward();
 
     _controller.addStatusListener(
@@ -360,67 +370,72 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     String speakerName =
         meetingPersons.length <= currentSpeaker ? "null" : meetingPersons[currentSpeaker];
 
-    return Stack(
+    int totalSeconds = _controller.duration!.inSeconds;
+
+    double mediaHeight = MediaQuery.of(context).size.height - magicNumberForMemeHeight + 90;
+    double stepSizePerSecond = mediaHeight / totalSeconds;
+
+    return Column(
       children: [
-        Container(
-          alignment: Alignment.topCenter,
-          child: Image.network(
-            "https://i.redd.it/eggo2nhj2cz61.png",
-            //height: 600,
-            height:
-                MediaQuery.of(context).size.height - (32 + 32 + 0 + 16 + 32 + 32 + 8 + 32 + 8 + 50),
-            // memetitle + padding to buttons + ... + 50 (magic number..)
-            fit: BoxFit.contain,
-          ),
-        ),
-        TweenAnimationBuilder(
-            tween: Tween<double>(begin: 0, end: 100),
-            duration: Duration(seconds: 3),
-            builder: (_, double i, __) {
-              return Positioned(
-                left: i,
-                child: Text(
-                  "$speakerName",
-                ),
-              );
-            }),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Stack(
           children: [
-            Padding(padding: EdgeInsets.all(32)),
-            CountdownClock(
-              animation: CurvedAnimation(parent: _controller, curve: Curves.linear),
-              maxDuration: _controller.duration!,
+            Container(
+              alignment: Alignment.topCenter,
+              child: _buildMeme(),
             ),
-            Padding(padding: EdgeInsets.all(32)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        if (isTimeStopped) {
-                          isTimeStopped = false;
-                          _controller.forward();
-                        } else {
-                          isTimeStopped = true;
-                          _controller.stop();
-                        }
-                      });
-                    },
-                    child: Text(
-                      isTimeStopped ? "Fortsetzen" : "Pause",
-                    )),
-                ElevatedButton(
-                  child: Text(
-                    "Fertig",
-                  ),
-                  onPressed: () {
-                    _goToNextSpeaker();
-                  },
-                ),
-              ],
-            )
+            AnimatedBuilder(
+                animation: animation,
+                builder: (context, child) {
+                  Duration durationLeft = Duration(seconds: totalSeconds - animation.value.toInt());
+                  return Positioned(
+                    top: animation.value * stepSizePerSecond,
+                    child: AnimatedContainer(
+                      duration: Duration(seconds: 1),
+                      color: isTimeStopped ? colorPaused : Colors.blueGrey,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: Container(
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          "${speakerName}, "
+                          "du hast noch ${durationLeft.inMinutes} Min "
+                          "${durationLeft.inSeconds.remainder(60)} Sek",
+                          style: TextStyle(color: Colors.amber),
+                        ),
+                      ),
+                    ),
+                  );
+                })
+          ],
+        ),
+        Padding(padding: EdgeInsets.all(32)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+                onPressed: () {
+                  // TODO: do not build new meme here
+                  setState(() {
+                    if (isTimeStopped) {
+                      isTimeStopped = false;
+                      _controller.forward();
+                    } else {
+                      isTimeStopped = true;
+                      _controller.stop();
+                    }
+                  });
+                },
+                child: Text(
+                  isTimeStopped ? "Fortsetzen" : "Pause",
+                )),
+            ElevatedButton(
+              child: Text(
+                "Fertig",
+              ),
+              onPressed: () {
+                _goToNextSpeaker();
+              },
+            ),
           ],
         ),
       ],
@@ -428,11 +443,11 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   }
 
   void _goToNextSpeaker() {
+    memeCounter++;
     isExtraTime = false;
     isTimeStopped = false;
     currentSpeaker++;
-    print(meetingPersons.length);
-    print(currentSpeaker);
+
     currentSpeaker >= meetingPersons.length
         ? Navigator.pushNamed(context, "meme")
         : Navigator.pushNamed(context, "timer");
@@ -445,7 +460,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Deine Zeit ist abgelaufen',
+            '${meetingPersons[currentSpeaker]}, deine Zeit ist abgelaufen',
           ),
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -538,51 +553,33 @@ class _MemePageState extends State<MemePage> {
     );
   }
 
-  String currentMemeTitle = "";
-  String currentMemeImage = "";
+  Widget _buildMemeOptions() {
+    // TODO: somehow stack this on top of memetitle
+    return Container(
+      alignment: Alignment.topRight,
+      child: TextButton(
+        style: TextButton.styleFrom(backgroundColor: Colors.white70),
+        onPressed: () {
+          setState(() {
+            isLanguageGerman ^= true;
+            memeCounter = 0;
+          });
+        },
+        child: Flag(
+          isLanguageGerman ? "US" : "DE",
+          height: 32,
+          width: 32,
+          fit: BoxFit.scaleDown,
+        ),
+      ),
+    );
+  }
 
   Widget _buildMemePage() {
-    if (memeCounter == 0) getNextMeme();
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              alignment: FractionalOffset.centerLeft,
-              child: Text(currentMemeTitle +
-                  "dsasalajf lkds jflkds jflkdsa jflkdsa jflkdsa jflkdsa jflkdsa j lkdsajflkdsafjsa"),
-            ),
-            Container(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                style: TextButton.styleFrom(backgroundColor: Colors.white70),
-                onPressed: () {
-                  setState(() {
-                    isLanguageGerman ^= true;
-                    memeCounter = 0;
-                  });
-                },
-                child: Flag(
-                  isLanguageGerman ? "US" : "DE",
-                  height: 32,
-                  width: 32,
-                  fit: BoxFit.scaleDown,
-                ),
-              ),
-            ),
-          ],
-        ),
-        memeCounter == 0
-            ? Icon(Icons.photo)
-            : Image.network(
-                currentMemeImage,
-                height: MediaQuery.of(context).size.height -
-                    (32 + 32 + 0 + 16 + 32 + 32 + 8 + 32 + 8 + 50),
-                // memetitle + padding to buttons + ... + 50 (magic number..)
-                fit: BoxFit.contain,
-              ),
+        _buildMeme(),
         Padding(padding: EdgeInsets.all(16)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -595,7 +592,9 @@ class _MemePageState extends State<MemePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                getNextMeme();
+                setState(() {
+                  memeCounter++;
+                });
               },
               child: Text(
                 "Noch ein Meme!",
@@ -606,31 +605,29 @@ class _MemePageState extends State<MemePage> {
       ],
     );
   }
+}
 
-  void getNextMeme() async {
-    // get json from programmerhumor and decode it
-    String memeSite = "www.reddit.com";
-    String memeSiteEnding = isLanguageGerman ? "r/ich_iel/top.json" : "/r/ProgrammerHumor/top.json";
-    final response = await http.get(Uri.https(memeSite, memeSiteEnding));
+Future<List<String>> fetchNextMemeTitleAndURL() async {
+  // get json from programmerhumor and decode it
+  String memeSite = "www.reddit.com";
+  String memeSiteEnding = isLanguageGerman ? "r/ich_iel/top.json" : "/r/ProgrammerHumor/top.json";
+  final response = await http.get(Uri.https(memeSite, memeSiteEnding));
 
-    Map<String, dynamic> memeJson = jsonDecode(response.body);
+  Map<String, dynamic> memeJson = jsonDecode(response.body);
 
-    while (true) {
-      memeCounter++;
-      bool isVideo = memeJson["data"]["children"][memeCounter]["data"]["is_video"];
-      bool hasHeight =
-          memeJson["data"]["children"][memeCounter]["data"]["thumbnail_height"] != null;
-      bool isGifv = memeJson["data"]["children"][memeCounter]["data"]["url"].contains(".gifv");
-      if (!isVideo && hasHeight && !isGifv) break;
-    }
-
-    setState(() {
-      currentMemeTitle = memeJson["data"]["children"][memeCounter]["data"]["title"];
-      currentMemeImage = memeJson["data"]["children"][memeCounter]["data"]["url"];
-    });
-
-    print(currentMemeImage);
+  while (true) {
+    bool isVideo = memeJson["data"]["children"][memeCounter]["data"]["is_video"];
+    bool hasHeight = memeJson["data"]["children"][memeCounter]["data"]["thumbnail_height"] != null;
+    bool isGifv = memeJson["data"]["children"][memeCounter]["data"]["url"].contains(".gifv");
+    if (!isVideo && hasHeight && !isGifv) break;
+    memeCounter++;
   }
+
+  currentMemeTitle = memeJson["data"]["children"][memeCounter]["data"]["title"];
+  currentMemeImage = memeJson["data"]["children"][memeCounter]["data"]["url"];
+
+  print(currentMemeImage);
+  return [currentMemeTitle, currentMemeImage];
 }
 
 class WorkPage extends StatelessWidget {
@@ -695,4 +692,39 @@ class ZebraPage extends StatelessWidget {
       ],
     );
   }
+}
+
+Widget _buildMemeTitleAndImage(BuildContext context) {
+  return Column(
+    children: [
+      Container(
+        alignment: Alignment.centerLeft,
+        child: Text(currentMemeTitle +
+            "xxxx xxx xxxx xx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx x x x xxxx x xx x x"),
+      ),
+      Image.network(
+        currentMemeImage,
+        height: MediaQuery.of(context).size.height - magicNumberForMemeHeight,
+        fit: BoxFit.contain,
+      ),
+    ],
+  );
+}
+
+Widget _buildMeme() {
+  return FutureBuilder(
+    builder: (context, AsyncSnapshot<List<String>> myfut) {
+      if (myfut.hasData) {
+        return Column(
+          children: [
+            _buildMemeTitleAndImage(context),
+            //_buildMemeOptions(),
+          ],
+        );
+      } else {
+        return Icon(Icons.photo);
+      }
+    },
+    future: fetchNextMemeTitleAndURL(),
+  );
 }
