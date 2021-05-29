@@ -14,21 +14,22 @@ int currentSpeaker = 0;
 Duration durationPerPerson = Duration(seconds: 1);
 Duration durationExtraTime = Duration(seconds: 30);
 bool isExtraTime = false;
-Color colorPaused = Colors.black;
 bool isTimeStopped = false;
-
-// styling
-Color color1 = Color(0xff004489);
-Color color2 = Color(0xffF9B200);
-// gets overwritten by mediaquery
-double myFontSizeScaleFactor = 30;
 
 // meme stuff
 int memeCounter = 0;
 bool isLanguageGerman = false;
 
+// styling
+final Color colorPaused = Colors.black;
+final Color color1 = Color(0xff004489);
+final Color color2 = Color(0xffF9B200);
+final double myFontSizeScaleFactor = 30;
+// gets calculated once in main.dart
+double myResponsiveFontSize = 1;
+
 // bottomsheet
-String githubURL = "https://github.com/mw3155/DailyAndMeme";
+final String githubURL = "https://github.com/mw3155/DailyAndMeme";
 
 Widget buildBottomSheet() {
   return AnimatedContainer(
@@ -84,14 +85,7 @@ void resetGlobalVariables() {
   durationPerPerson = Duration(seconds: 1);
   durationExtraTime = Duration(seconds: 30);
   isExtraTime = false;
-  colorPaused = Colors.black;
   isTimeStopped = false;
-
-  // styling
-  color1 = Color(0xff004489);
-  color2 = Color(0xffF9B200);
-  // gets overwritten by mediaquery
-  myFontSizeScaleFactor = 30;
 
   // meme stuff
   memeCounter = 0;

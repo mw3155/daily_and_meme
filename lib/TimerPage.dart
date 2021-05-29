@@ -63,16 +63,19 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     String speakerName =
         meetingPersons.length <= currentSpeaker ? "null" : meetingPersons[currentSpeaker];
 
+    double screenWidth = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         TweenAnimationBuilder(
-            tween: Tween<double>(begin: 0, end: 100),
+            tween: Tween<double>(begin: 0, end: screenWidth * 0.44),
             duration: Duration(seconds: 3),
             builder: (_, double i, __) {
               return Positioned(
                 left: i,
                 child: Text(
-                  "$speakerName",
+                  // comment out, maybe this tween stuff is useful later
+                  //"$speakerName",
+                  "",
                 ),
               );
             }),
@@ -179,6 +182,9 @@ class CountdownClock extends AnimatedWidget {
 
     double clockSize = MediaQuery.of(context).size.shortestSide * 0.6;
 
+    String speakerName =
+        meetingPersons.length <= currentSpeaker ? "null" : meetingPersons[currentSpeaker];
+
     return SizedBox(
       height: clockSize,
       child: Stack(
@@ -198,7 +204,7 @@ class CountdownClock extends AnimatedWidget {
             child: Container(
               alignment: FractionalOffset.center,
               child: Text(
-                  "Du hast noch\n${currentDuration.inMinutes} Min ${currentDuration.inSeconds.remainder(60)} Sek"),
+                  "$speakerName, \ndu hast noch\n${currentDuration.inMinutes} Min ${currentDuration.inSeconds.remainder(60)} Sek"),
             ),
           ),
         ],

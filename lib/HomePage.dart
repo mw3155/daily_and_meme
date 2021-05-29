@@ -24,8 +24,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildHomepage() {
-    double myResponsiveFontSize = MediaQuery.of(context).size.height / myFontSizeScaleFactor;
-
     return Column(
       //crossAxisAlignment: CrossAxisAlignment.center, // no effect?
       children: [

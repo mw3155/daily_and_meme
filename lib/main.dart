@@ -20,7 +20,9 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       title: 'Daily and Meme',
       builder: (context, child) {
-        double myResponsiveFontSize = MediaQuery.of(context).size.height / myFontSizeScaleFactor;
+        // init font size
+        myResponsiveFontSize = MediaQuery.of(context).size.height / myFontSizeScaleFactor;
+
         return Theme(
           data: ThemeData(
             backgroundColor: Colors.amber,
