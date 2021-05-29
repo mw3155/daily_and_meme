@@ -55,7 +55,12 @@ class _HomePageState extends State<HomePage> {
                   });
 
                   // Then show a snackbar.
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("RIP $item")));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("RIP $item"),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
                 },
                 // Show a red background as the item is swiped away.
                 background: Container(color: Colors.red),

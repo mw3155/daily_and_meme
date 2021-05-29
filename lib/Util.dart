@@ -53,7 +53,7 @@ Widget buildBottomSheet() {
           tooltip: "Zur Startseite",
           iconSize: 32,
           onPressed: () {
-            // TODO reset global vars
+            resetGlobalVariables();
             navigatorKey.currentState?.pushNamed("/");
           },
         ),
@@ -71,4 +71,29 @@ Widget buildBottomSheet() {
       ],
     ),
   );
+}
+
+void resetGlobalVariables() {
+  // global variables are fun
+  nMeetingMinutes = 15;
+  meetingPersons = ["Sebastian", "Florian", "Markus", "Thomas", "Alex"];
+  newMeetingPerson = "";
+
+  // timer
+  currentSpeaker = 0;
+  durationPerPerson = Duration(seconds: 1);
+  durationExtraTime = Duration(seconds: 30);
+  isExtraTime = false;
+  colorPaused = Colors.black;
+  isTimeStopped = false;
+
+  // styling
+  color1 = Color(0xff004489);
+  color2 = Color(0xffF9B200);
+  // gets overwritten by mediaquery
+  myFontSizeScaleFactor = 30;
+
+  // meme stuff
+  memeCounter = 0;
+  isLanguageGerman = false;
 }
