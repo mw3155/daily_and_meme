@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'RobotAnimation.dart';
 
 import 'Util.dart';
 
@@ -63,9 +64,15 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     String speakerName =
         meetingPersons.length <= currentSpeaker ? "null" : meetingPersons[currentSpeaker];
 
+    double currentValueInSeconds = (1 - _controller.value) * _controller.duration!.inSeconds;
+    //Duration currentDuration = Duration(seconds: currentValueInSeconds.toInt());
+    double picksLeft = currentValueInSeconds / 10;
+    // TODO: CONT: set state new seconds ...
+
     double screenWidth = MediaQuery.of(context).size.width;
     return Stack(
       children: [
+        /*
         TweenAnimationBuilder(
             tween: Tween<double>(begin: 0, end: screenWidth * 0.44),
             duration: Duration(seconds: 3),
@@ -79,14 +86,19 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                 ),
               );
             }),
+        */
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(padding: EdgeInsets.all(32)),
+            /*
             CountdownClock(
               animation: CurvedAnimation(parent: _controller, curve: Curves.linear),
               maxDuration: _controller.duration!,
             ),
+            */
+            Text("Speaker: \t$speakerName\nVerbleibende Picks: \t$picksLeft"),
+            RobotAnimation(),
             Padding(padding: EdgeInsets.all(32)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
