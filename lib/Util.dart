@@ -16,6 +16,9 @@ Duration durationExtraTime = Duration(seconds: 30);
 bool isExtraTime = false;
 bool isTimeStopped = false;
 
+// robot timer
+Duration durationPick = Duration(seconds: 20);
+
 // meme stuff
 int memeCounter = 0;
 bool isLanguageGerman = false;

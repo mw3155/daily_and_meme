@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
+import 'Util.dart';
+
 class RobotAnimation extends StatefulWidget {
   const RobotAnimation({Key? key}) : super(key: key);
 
@@ -10,6 +12,13 @@ class RobotAnimation extends StatefulWidget {
 }
 
 class _RobotAnimationState extends State<RobotAnimation> {
+  // TODO use this to stop when time finished; Check sample again w button
+  // TODO use this to stop when time finished; Check sample again w button
+  // TODO use this to stop when time finished; Check sample again w button
+  // TODO use this to stop when time finished; Check sample again w button
+  // TODO use this to stop when time finished; Check sample again w button
+  // TODO use this to stop when time finished; Check sample again w button
+  // TODO use this to stop when time finished; Check sample again w button
   void _togglePlay() {
     if (_controller == null) {
       return;
@@ -31,7 +40,7 @@ class _RobotAnimationState extends State<RobotAnimation> {
     // Load the animation file from the bundle, note that you could also
     // download this. The RiveFile just expects a list of bytes.
 //          RiveAnimation.asset( "animations/animation-robot1.riv",
-    rootBundle.load('assets/animations/animation-robot1.riv').then(
+    rootBundle.load('assets/animations/animation-robot2.riv').then(
       (data) async {
         // Load the RiveFile from the binary data.
         final file = RiveFile.import(data);
@@ -44,7 +53,8 @@ class _RobotAnimationState extends State<RobotAnimation> {
         artboard.addController(_controller = SimpleAnimation('Animation 1'));
         setState(() {
           _riveArtboard = artboard;
-          _riveArtboard!.instance().animationByName("Animation 1")!.animation.speed = 0.05;
+          _riveArtboard!.instance().animationByName("Animation 1")!.animation.speed =
+              1.0 / durationPick.inSeconds;
         });
       },
     );

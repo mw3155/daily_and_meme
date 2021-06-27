@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'RobotAnimation.dart';
 
@@ -29,10 +31,20 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   }
 
   late AnimationController _controller;
+  late Timer dummyTimer;
+  late int dummySecondsPassed = 0;
 
   @override
   void initState() {
     super.initState();
+
+    // HACK: create a timer to update a dummy value, to trigger rebuild of widget
+    // -> updates the pick-count...lol...
+    dummyTimer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        dummySecondsPassed += 1;
+      });
+    });
 
     _controller = AnimationController(
       vsync: this,
@@ -48,6 +60,8 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
           _showTimerFinishedDialog();
         } else if (status == AnimationStatus.dismissed) {
           _controller.forward();
+        } else if (status == AnimationStatus.forward) {
+          print("hello");
         }
       },
     );
@@ -65,11 +79,10 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
         meetingPersons.length <= currentSpeaker ? "null" : meetingPersons[currentSpeaker];
 
     double currentValueInSeconds = (1 - _controller.value) * _controller.duration!.inSeconds;
-    //Duration currentDuration = Duration(seconds: currentValueInSeconds.toInt());
-    double picksLeft = currentValueInSeconds / 10;
-    // TODO: CONT: set state new seconds ...
+    int picksLeft = currentValueInSeconds ~/ durationPick.inSeconds;
 
     double screenWidth = MediaQuery.of(context).size.width;
+
     return Stack(
       children: [
         /*
@@ -97,7 +110,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
               maxDuration: _controller.duration!,
             ),
             */
-            Text("Speaker: \t$speakerName\nVerbleibende Picks: \t$picksLeft"),
+            Text("Sprecher: \t$speakerName\nVerbleibende Picks: \t$picksLeft"),
             RobotAnimation(),
             Padding(padding: EdgeInsets.all(32)),
             Row(
