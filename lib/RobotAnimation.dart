@@ -39,7 +39,7 @@ class _RobotAnimationState extends State<RobotAnimation> {
 
     // Load the animation file from the bundle, note that you could also
     // download this. The RiveFile just expects a list of bytes.
-//          RiveAnimation.asset( "animations/animation-robot1.riv",
+    //          RiveAnimation.asset( "animations/animation-robot1.riv",
     rootBundle.load('assets/animations/animation-robot2.riv').then(
       (data) async {
         // Load the RiveFile from the binary data.
@@ -63,6 +63,10 @@ class _RobotAnimationState extends State<RobotAnimation> {
   @override
   Widget build(BuildContext context) {
     double robotSize = MediaQuery.of(context).size.shortestSide * 0.6;
+
+    if (isTimeStopped && isPlaying) _togglePlay();
+    if (!isTimeStopped && !isPlaying) _togglePlay();
+
     return Column(
       children: [
         SizedBox(
