@@ -17,7 +17,7 @@ bool isExtraTime = false;
 bool isTimeStopped = false;
 
 // robot timer
-Duration durationPick = Duration(seconds: 20);
+Duration durationPick = Duration(seconds: 30);
 
 // meme stuff
 int memeCounter = 0;

@@ -53,10 +53,12 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
           : Duration(seconds: durationPerPerson.inSeconds),
     );
     _controller.forward();
+    isTimeStopped = false;
 
     _controller.addStatusListener(
       (status) {
         if (status == AnimationStatus.completed) {
+          isTimeStopped = true;
           _showTimerFinishedDialog();
         } else if (status == AnimationStatus.dismissed) {
           _controller.forward();
@@ -79,7 +81,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
         meetingPersons.length <= currentSpeaker ? "null" : meetingPersons[currentSpeaker];
 
     double currentValueInSeconds = (1 - _controller.value) * _controller.duration!.inSeconds;
-    int picksLeft = currentValueInSeconds ~/ durationPick.inSeconds;
+    int picksLeft = (currentValueInSeconds - 1) ~/ durationPick.inSeconds + 1;
 
     double screenWidth = MediaQuery.of(context).size.width;
 

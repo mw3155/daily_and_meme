@@ -120,7 +120,12 @@ class _HomePageState extends State<HomePage> {
         ElevatedButton(
           onPressed: () {
             int nSecondsPerPerson = nMeetingMinutes * 60 ~/ meetingPersons.length;
+            // floor duration per person to be divisible by durationPick
+            nSecondsPerPerson =
+                nSecondsPerPerson ~/ durationPick.inSeconds * durationPick.inSeconds;
             durationPerPerson = Duration(seconds: nSecondsPerPerson);
+            if (durationPerPerson.inSeconds < durationPick.inSeconds)
+              durationPerPerson = durationPick;
             _showConfirmDialog();
           },
           child: Text(
