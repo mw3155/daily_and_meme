@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
       bottomSheet: buildBottomSheet(),
       body: Center(
         child: Container(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.all(defaultEdgeInsets),
           child: _buildHomepage(),
         ),
       ),
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
           },
           child: Icon(Icons.shuffle),
         ),
-        Padding(padding: EdgeInsets.all(32)),
+        Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         Text("Gesamtdauer (Minuten):"),
         NumberPicker(
             selectedTextStyle: TextStyle(
@@ -116,7 +116,24 @@ class _HomePageState extends State<HomePage> {
             haptics: true,
             axis: Axis.horizontal,
             onChanged: (newValue) => setState(() => nMeetingMinutes = newValue)),
-        Padding(padding: EdgeInsets.all(32)),
+        Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
+        Text("Animation Style:"),
+        ToggleButtons(
+          children: [
+            // borders between togglebuttons are too complicated, use this instead...
+            Text("  " + animationOptions[0] + "  "),
+            Text("  " + animationOptions[1] + "  "),
+          ],
+          isSelected: selectedAnimation,
+          onPressed: (int index) {
+            setState(() {
+              selectedAnimation = List.generate(animationOptions.length, (index) => false);
+              selectedAnimation[index] = true;
+              chosenAnimation = index;
+            });
+          },
+        ),
+        Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         ElevatedButton(
           onPressed: () {
             int nSecondsPerPerson = nMeetingMinutes * 60 ~/ meetingPersons.length;

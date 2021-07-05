@@ -10,6 +10,10 @@ List<String> meetingPersons = ["Sebastian", "Florian", "Markus", "Thomas", "Alex
 String newMeetingPerson = "";
 
 // timer
+List<String> animationOptions = ["Robot", "Countdown"];
+List<bool> selectedAnimation =
+    List.generate(animationOptions.length, (index) => index > 0 ? false : true);
+int chosenAnimation = 0;
 int currentSpeaker = 0;
 Duration durationPerPerson = Duration(seconds: 1);
 Duration durationExtraTime = Duration(seconds: 30);
@@ -30,6 +34,7 @@ final Color color2 = Color(0xffF9B200);
 final double myFontSizeScaleFactor = 30;
 // gets calculated once in main.dart
 double myResponsiveFontSize = 1;
+const double defaultEdgeInsets = 16;
 
 // bottomsheet
 final String githubURL = "https://github.com/mw3155/DailyAndMeme";

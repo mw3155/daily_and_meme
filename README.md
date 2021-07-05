@@ -13,3 +13,6 @@ TODO:
 * donations (buy me a beer)
 
 
+How to build:
+* flutter build web --web-renderer html
+* cp -r -Force .\build\web\* ..\mw3155.github.io\

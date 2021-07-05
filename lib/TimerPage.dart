@@ -106,14 +106,18 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(padding: EdgeInsets.all(32)),
-            /*
-            CountdownClock(
-              animation: CurvedAnimation(parent: _controller, curve: Curves.linear),
-              maxDuration: _controller.duration!,
-            ),
-            */
-            Text("Sprecher: \t$speakerName\nVerbleibende Picks: \t$picksLeft"),
-            RobotAnimation(),
+            animationOptions[chosenAnimation] == "Robot"
+                ? Text("Sprecher: \t$speakerName\nVerbleibende Picks: \t$picksLeft")
+                : Padding(padding: EdgeInsets.all(0)),
+            animationOptions[chosenAnimation] == "Robot"
+                ? RobotAnimation()
+                : Padding(padding: EdgeInsets.all(0)),
+            animationOptions[chosenAnimation] == "Countdown"
+                ? CountdownClock(
+                    animation: CurvedAnimation(parent: _controller, curve: Curves.linear),
+                    maxDuration: _controller.duration!,
+                  )
+                : Padding(padding: EdgeInsets.all(0)),
             Padding(padding: EdgeInsets.all(32)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -195,6 +199,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   }
 }
 
+// TODO make own file
 class CountdownClock extends AnimatedWidget {
   // not sure what this key thing does, but "?" seems like a good fix
   CountdownClock({Key? key, required this.animation, required this.maxDuration})
