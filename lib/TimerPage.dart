@@ -32,7 +32,6 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
 
   late AnimationController _controller;
   late Timer dummyTimer;
-  late int dummySecondsPassed = 0;
 
   @override
   void initState() {
@@ -40,9 +39,12 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
 
     // HACK: create a timer to update a dummy value, to trigger rebuild of widget
     // -> updates the pick-count...lol...
-    dummyTimer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    // TODO decreasing timer does not increase fps, right??
+    // TODO decreasing timer does not increase fps, right??
+    // TODO decreasing timer does not increase fps, right??
+    dummyTimer = Timer.periodic(Duration(milliseconds: 1000), (Timer t) {
       setState(() {
-        dummySecondsPassed += 1;
+        nSecondsPassedCurrentSpeaker += 1;
       });
     });
 

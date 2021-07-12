@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
 import 'Util.dart';
+
+RiveFile? myRiveFile;
 
 class RobotAnimation extends StatefulWidget {
   const RobotAnimation({Key? key}) : super(key: key);
@@ -24,7 +28,17 @@ class _RobotAnimationState extends State<RobotAnimation> {
       return;
     }
     setState(() {
-      _controller!.isActive = !_controller!.isActive;
+      _controller!.isActive = _controller!.isActive;
+    });
+  }
+
+  void changeAnimation(String nextAnimationName) {
+    final artboard = myRiveFile!.mainArtboard.instance();
+    artboard.addController(_controller = SimpleAnimation(nextAnimationName));
+    setState(() {
+      _riveArtboard = artboard;
+      _riveArtboard!.instance().animationByName(nextAnimationName)!.animation.speed =
+          1.0 / durationPick.inSeconds;
     });
   }
 
@@ -40,20 +54,22 @@ class _RobotAnimationState extends State<RobotAnimation> {
     // Load the animation file from the bundle, note that you could also
     // download this. The RiveFile just expects a list of bytes.
     //          RiveAnimation.asset( "animations/animation-robot1.riv",
-    rootBundle.load('assets/animations/animation-robot2.riv').then(
+    rootBundle.load('assets/animations/animation-dailyrobot-v3.riv').then(
       (data) async {
         // Load the RiveFile from the binary data.
         final file = RiveFile.import(data);
+        //myRiveFile = RiveFile.import(data);
 
-        // The artboard is the root of the animation and gets drawn in the
-        // Rive widget.
+        // The artboard is the root of the animation and gets drawn in the Rive widget.
         final artboard = file.mainArtboard.instance();
-        // Add a controller to play back a known animation on the main/default
-        // artboard. We store a reference to it so we can toggle playback.
-        artboard.addController(_controller = SimpleAnimation('Animation 1'));
+        //final artboard = myRiveFile!.mainArtboard.instance();
+        // Add a controller to play back a known animation on the main/default artboard.
+        // We store a reference to it so we can toggle playback.
+        String nextAnimationName = "Animation-Success";
+        artboard.addController(_controller = SimpleAnimation(nextAnimationName));
         setState(() {
           _riveArtboard = artboard;
-          _riveArtboard!.instance().animationByName("Animation 1")!.animation.speed =
+          _riveArtboard!.instance().animationByName(nextAnimationName)!.animation.speed =
               1.0 / durationPick.inSeconds;
         });
       },
@@ -66,6 +82,14 @@ class _RobotAnimationState extends State<RobotAnimation> {
 
     if (isTimeStopped && isPlaying) _togglePlay();
     if (!isTimeStopped && !isPlaying) _togglePlay();
+
+    if (!isTimeStopped &&
+        isPlaying &&
+        nSecondsPassedCurrentSpeaker % durationPick.inSeconds == 0 &&
+        myRiveFile != null) {
+      Random nextRandom = new Random();
+      //changeAnimation(robotAnimations[nextRandom.nextInt(3)]);
+    }
 
     return Column(
       children: [
