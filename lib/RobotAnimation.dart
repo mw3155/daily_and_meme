@@ -28,13 +28,29 @@ class _RobotAnimationState extends State<RobotAnimation> {
       return;
     }
     setState(() {
-      _controller!.isActive = _controller!.isActive;
+      _controller!.isActive = !_controller!.isActive;
     });
   }
 
-  void changeAnimation(String nextAnimationName) {
+  void _changeAnimation(String nextAnimationName) {
+    print("changing anim");
     final artboard = myRiveFile!.mainArtboard.instance();
-    artboard.addController(_controller = SimpleAnimation(nextAnimationName));
+
+    _controller = OneShotAnimation(
+      "Animation-Success",
+      autoplay: true,
+      onStop: () => setState(() {
+        print("wow in stop");
+        _isPlaying = false;
+      }),
+      onStart: () => setState(() {
+        print("wow in start");
+        _isPlaying = true;
+      }),
+    );
+
+    //artboard.addController(_controller = SimpleAnimation(nextAnimationName));
+    artboard.addController(_controller!);
     setState(() {
       _riveArtboard = artboard;
       _riveArtboard!.instance().animationByName(nextAnimationName)!.animation.speed =
@@ -45,7 +61,10 @@ class _RobotAnimationState extends State<RobotAnimation> {
   /// Tracks if the animation is playing by whether controller is running.
   bool get isPlaying => _controller?.isActive ?? false;
 
+  bool _isPlaying = false;
+
   Artboard? _riveArtboard;
+  // Todo whyn ote late?
   RiveAnimationController? _controller;
   @override
   void initState() {
@@ -57,12 +76,10 @@ class _RobotAnimationState extends State<RobotAnimation> {
     rootBundle.load('assets/animations/animation-dailyrobot-v3.riv').then(
       (data) async {
         // Load the RiveFile from the binary data.
-        final file = RiveFile.import(data);
-        //myRiveFile = RiveFile.import(data);
+        myRiveFile = RiveFile.import(data);
 
         // The artboard is the root of the animation and gets drawn in the Rive widget.
-        final artboard = file.mainArtboard.instance();
-        //final artboard = myRiveFile!.mainArtboard.instance();
+        final artboard = myRiveFile!.mainArtboard.instance();
         // Add a controller to play back a known animation on the main/default artboard.
         // We store a reference to it so we can toggle playback.
         String nextAnimationName = "Animation-Success";
@@ -79,16 +96,17 @@ class _RobotAnimationState extends State<RobotAnimation> {
   @override
   Widget build(BuildContext context) {
     double robotSize = MediaQuery.of(context).size.shortestSide * 0.6;
+    print("rebuild robotanim");
 
-    if (isTimeStopped && isPlaying) _togglePlay();
-    if (!isTimeStopped && !isPlaying) _togglePlay();
+    if (isTimePaused && isPlaying) _togglePlay();
+    if (!isTimePaused && !isPlaying) _togglePlay();
 
-    if (!isTimeStopped &&
+    if (!isTimePaused &&
         isPlaying &&
         nSecondsPassedCurrentSpeaker % durationPick.inSeconds == 0 &&
         myRiveFile != null) {
       Random nextRandom = new Random();
-      //changeAnimation(robotAnimations[nextRandom.nextInt(3)]);
+      _changeAnimation(robotAnimations[nextRandom.nextInt(3)]);
     }
 
     return Column(

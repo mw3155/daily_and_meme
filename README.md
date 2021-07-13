@@ -7,7 +7,7 @@ TODO:
 * like and share buttons
 * goto comments
 * annoying sounds
-* shuffle persons
+* shuffle persons better
 * annoying ads
 * we are hiring
 * donations (buy me a beer)

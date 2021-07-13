@@ -18,11 +18,11 @@ int currentSpeaker = 0;
 Duration durationPerPerson = Duration(seconds: 1);
 Duration durationExtraTime = Duration(seconds: 30);
 bool isExtraTime = false;
-bool isTimeStopped = false;
+bool isTimePaused = false;
 int nSecondsPassedCurrentSpeaker = 0;
 
 // robot timer
-Duration durationPick = Duration(seconds: 30);
+Duration durationPick = Duration(seconds: 3);
 List<String> robotAnimations = ["Animation-Success", "Animation-Dropped", "Animation-NoObject"];
 
 // meme stuff
@@ -44,7 +44,7 @@ final String githubURL = "https://github.com/mw3155/DailyAndMeme";
 Widget buildBottomSheet() {
   return AnimatedContainer(
     duration: Duration(seconds: 1),
-    color: isTimeStopped ? colorPaused : Colors.blueGrey,
+    color: isTimePaused ? colorPaused : Colors.blueGrey,
     padding: EdgeInsets.all(8),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -96,7 +96,7 @@ void resetGlobalVariables() {
   durationPerPerson = Duration(seconds: 1);
   durationExtraTime = Duration(seconds: 30);
   isExtraTime = false;
-  isTimeStopped = false;
+  isTimePaused = false;
 
   // meme stuff
   memeCounter = 0;

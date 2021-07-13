@@ -21,7 +21,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
         body: Center(
           child: AnimatedContainer(
             duration: Duration(seconds: 1),
-            color: isTimeStopped ? colorPaused : Colors.blueGrey,
+            color: isTimePaused ? colorPaused : Colors.blueGrey,
             padding: const EdgeInsets.all(32),
             child: _buildTimerPage(),
           ),
@@ -44,7 +44,15 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     // TODO decreasing timer does not increase fps, right??
     dummyTimer = Timer.periodic(Duration(milliseconds: 1000), (Timer t) {
       setState(() {
-        nSecondsPassedCurrentSpeaker += 1;
+        // TODO: nSeconds should not be increased while pausing; leads to animation jumps
+        // why does this not work??
+        // why does this not work??
+        // why does this not work??
+        // why does this not work??
+        if (!isTimePaused) {
+          nSecondsPassedCurrentSpeaker += 1;
+          print(nSecondsPassedCurrentSpeaker);
+        }
       });
     });
 
@@ -55,12 +63,12 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
           : Duration(seconds: durationPerPerson.inSeconds),
     );
     _controller.forward();
-    isTimeStopped = false;
+    isTimePaused = false;
 
     _controller.addStatusListener(
       (status) {
         if (status == AnimationStatus.completed) {
-          isTimeStopped = true;
+          isTimePaused = true;
           _showTimerFinishedDialog();
         } else if (status == AnimationStatus.dismissed) {
           _controller.forward();
@@ -127,17 +135,17 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                 ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        if (isTimeStopped) {
-                          isTimeStopped = false;
+                        if (isTimePaused) {
+                          isTimePaused = false;
                           _controller.forward();
                         } else {
-                          isTimeStopped = true;
+                          isTimePaused = true;
                           _controller.stop();
                         }
                       });
                     },
                     child: Text(
-                      isTimeStopped ? "Fortsetzen" : "Pause",
+                      isTimePaused ? "Fortsetzen" : "Pause",
                     )),
                 ElevatedButton(
                   child: Text(
@@ -157,7 +165,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
 
   void _goToNextSpeaker() {
     isExtraTime = false;
-    isTimeStopped = false;
+    isTimePaused = false;
     currentSpeaker++;
     print(meetingPersons.length);
     print(currentSpeaker);
