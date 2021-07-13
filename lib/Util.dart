@@ -19,10 +19,10 @@ Duration durationPerPerson = Duration(seconds: 1);
 Duration durationExtraTime = Duration(seconds: 30);
 bool isExtraTime = false;
 bool isTimePaused = false;
-int nSecondsPassedCurrentSpeaker = 0;
+double nMillisecondsPassedCurrentSpeaker = 0;
 
 // robot timer
-Duration durationPick = Duration(seconds: 3);
+Duration durationPick = Duration(seconds: 30);
 List<String> robotAnimations = ["Animation-Success", "Animation-Dropped", "Animation-NoObject"];
 
 // meme stuff
@@ -89,7 +89,7 @@ void resetGlobalVariables() {
   nMeetingMinutes = 15;
   meetingPersons = ["Sebastian", "Florian", "Markus", "Thomas", "Alex"];
   newMeetingPerson = "";
-  nSecondsPassedCurrentSpeaker = 0;
+  nMillisecondsPassedCurrentSpeaker = 0;
 
   // timer
   currentSpeaker = 0;

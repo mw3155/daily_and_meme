@@ -42,17 +42,13 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     // TODO decreasing timer does not increase fps, right??
     // TODO decreasing timer does not increase fps, right??
     // TODO decreasing timer does not increase fps, right??
-    dummyTimer = Timer.periodic(Duration(milliseconds: 1000), (Timer t) {
+    dummyTimer = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
       setState(() {
-        // TODO: nSeconds should not be increased while pausing; leads to animation jumps
-        // why does this not work??
-        // why does this not work??
-        // why does this not work??
-        // why does this not work??
+        // nSeconds should not be increased while pausing; leads to animation jumps
         if (!isTimePaused) {
-          nSecondsPassedCurrentSpeaker += 1;
-          print(nSecondsPassedCurrentSpeaker);
+          nMillisecondsPassedCurrentSpeaker += 100;
         }
+        //if (nMillisecondsPassedCurrentSpeaker % 1000 == 0) print(nMillisecondsPassedCurrentSpeaker);
       });
     });
 
@@ -166,6 +162,8 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   void _goToNextSpeaker() {
     isExtraTime = false;
     isTimePaused = false;
+    nMillisecondsPassedCurrentSpeaker = 0;
+    dummyTimer.cancel();
     currentSpeaker++;
     print(meetingPersons.length);
     print(currentSpeaker);
@@ -192,6 +190,8 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                 ),
                 onPressed: () {
                   isExtraTime = true;
+                  dummyTimer.cancel();
+                  nMillisecondsPassedCurrentSpeaker = 0;
                   Navigator.pushNamed(context, "timer");
                 },
               ),

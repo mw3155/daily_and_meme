@@ -33,24 +33,9 @@ class _RobotAnimationState extends State<RobotAnimation> {
   }
 
   void _changeAnimation(String nextAnimationName) {
-    print("changing anim");
+    //print("changing anim");
     final artboard = myRiveFile!.mainArtboard.instance();
-
-    _controller = OneShotAnimation(
-      "Animation-Success",
-      autoplay: true,
-      onStop: () => setState(() {
-        print("wow in stop");
-        _isPlaying = false;
-      }),
-      onStart: () => setState(() {
-        print("wow in start");
-        _isPlaying = true;
-      }),
-    );
-
-    //artboard.addController(_controller = SimpleAnimation(nextAnimationName));
-    artboard.addController(_controller!);
+    artboard.addController(_controller = SimpleAnimation(nextAnimationName));
     setState(() {
       _riveArtboard = artboard;
       _riveArtboard!.instance().animationByName(nextAnimationName)!.animation.speed =
@@ -61,10 +46,7 @@ class _RobotAnimationState extends State<RobotAnimation> {
   /// Tracks if the animation is playing by whether controller is running.
   bool get isPlaying => _controller?.isActive ?? false;
 
-  bool _isPlaying = false;
-
   Artboard? _riveArtboard;
-  // Todo whyn ote late?
   RiveAnimationController? _controller;
   @override
   void initState() {
@@ -96,14 +78,13 @@ class _RobotAnimationState extends State<RobotAnimation> {
   @override
   Widget build(BuildContext context) {
     double robotSize = MediaQuery.of(context).size.shortestSide * 0.6;
-    print("rebuild robotanim");
 
     if (isTimePaused && isPlaying) _togglePlay();
     if (!isTimePaused && !isPlaying) _togglePlay();
 
     if (!isTimePaused &&
         isPlaying &&
-        nSecondsPassedCurrentSpeaker % durationPick.inSeconds == 0 &&
+        nMillisecondsPassedCurrentSpeaker % durationPick.inMilliseconds == 0 &&
         myRiveFile != null) {
       Random nextRandom = new Random();
       _changeAnimation(robotAnimations[nextRandom.nextInt(3)]);
