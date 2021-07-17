@@ -112,13 +112,13 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(padding: EdgeInsets.all(32)),
-            animationOptions[chosenAnimation] == "Robot"
+            animationOptions[chosenAnimation] == "Luke v2"
                 ? Text("Sprecher: \t$speakerName\nVerbleibende Picks: \t$picksLeft")
                 : Padding(padding: EdgeInsets.all(0)),
-            animationOptions[chosenAnimation] == "Robot"
+            animationOptions[chosenAnimation] == "Luke v2"
                 ? RobotAnimation()
                 : Padding(padding: EdgeInsets.all(0)),
-            animationOptions[chosenAnimation] == "Countdown"
+            animationOptions[chosenAnimation] == "Stoppuhr"
                 ? CountdownClock(
                     animation: CurvedAnimation(parent: _controller, curve: Curves.linear),
                     maxDuration: _controller.duration!,

@@ -23,7 +23,52 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _showAddPersonDialog() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        var nameController = TextEditingController();
+        return AlertDialog(
+          title: Text('Teilnehmer hinzufügen'),
+          content: TextFormField(
+            controller: nameController,
+            decoration: InputDecoration(hintText: 'Name'),
+          ),
+          actions: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("Abbrechen"),
+                    ),
+                    Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          meetingPersons.add(nameController.text);
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Text("Hinzufügen"),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildHomepage() {
+    var newMeetingPersonController = TextEditingController();
     return Column(
       //crossAxisAlignment: CrossAxisAlignment.center, // no effect?
       children: [
@@ -77,31 +122,26 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.1,
-          width: MediaQuery.of(context).size.height * 0.2,
-          child: TextField(
-            onChanged: (String newName) {
-              // TODO: this seems like a hack, how to do better?
-              newMeetingPerson = newName;
-            },
-            onSubmitted: (value) {
-              setState(() {
-                meetingPersons.add(newMeetingPerson);
-              });
-            },
-            decoration: InputDecoration(
-              border: UnderlineInputBorder(),
-              labelText: 'Neuer Teilnehmer',
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                _showAddPersonDialog();
+              },
+              child: Icon(Icons.add),
             ),
-          ),
+            Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
+            ElevatedButton(
+              onPressed: () {
+                meetingPersons.shuffle();
+              },
+              child: Icon(Icons.shuffle),
+            ),
+          ],
         ),
-        ElevatedButton(
-          onPressed: () {
-            meetingPersons.shuffle();
-          },
-          child: Icon(Icons.shuffle),
-        ),
+        //meetingPersons.add(newMeetingPerson);
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         Text("Gesamtdauer (Minuten):"),
         NumberPicker(
@@ -117,7 +157,7 @@ class _HomePageState extends State<HomePage> {
             axis: Axis.horizontal,
             onChanged: (newValue) => setState(() => nMeetingMinutes = newValue)),
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
-        Text("Animation Style:"),
+        Text("Animation:"),
         ToggleButtons(
           children: [
             // borders between togglebuttons are too complicated, use this instead...

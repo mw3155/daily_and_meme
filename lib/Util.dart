@@ -10,7 +10,7 @@ List<String> meetingPersons = ["Sebastian", "Florian", "Markus", "Thomas", "Alex
 String newMeetingPerson = "";
 
 // timer
-List<String> animationOptions = ["Robot", "Countdown"];
+List<String> animationOptions = ["Luke v2", "Stoppuhr"];
 List<bool> selectedAnimation =
     List.generate(animationOptions.length, (index) => index > 0 ? false : true);
 int chosenAnimation = 0;
@@ -33,7 +33,7 @@ bool isLanguageGerman = false;
 final Color colorPaused = Colors.black;
 final Color color1 = Color(0xff004489);
 final Color color2 = Color(0xffF9B200);
-final double myFontSizeScaleFactor = 30;
+final double myFontSizeScaleFactor = 34;
 // gets calculated once in main.dart
 double myResponsiveFontSize = 1;
 const double defaultEdgeInsets = 16;
