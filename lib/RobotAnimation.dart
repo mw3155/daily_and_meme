@@ -78,9 +78,17 @@ class _RobotAnimationState extends State<RobotAnimation> {
     if (!isTimePaused &&
         isPlaying &&
         nMillisecondsPassedCurrentSpeaker % durationPicks[chosenAnimation].inMilliseconds == 0 &&
-        myRiveFile != null) {
+        myRiveFile != null &&
+        currentSpeaker < meetingPersons.length) {
       Random nextRandom = new Random();
-      _changeAnimation(robotAnimations[nextRandom.nextInt(3)]);
+      int nextRandomInt = nextRandom.nextInt(3);
+      _changeAnimation(robotAnimations[nextRandomInt]);
+
+      // save if pick success/fail for computing accuracy
+      if (robotAnimations[nextRandomInt].contains("Success"))
+        pickHistoryPerPerson[currentSpeaker].add(1);
+      else
+        pickHistoryPerPerson[currentSpeaker].add(0);
     }
 
     return Column(

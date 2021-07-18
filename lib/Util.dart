@@ -25,6 +25,8 @@ double nMillisecondsPassedCurrentSpeaker = 0;
 List<Duration> durationPicks = [Duration(seconds: 3), Duration(seconds: 30)];
 List<String> robotAnimations = ["Animation-Success", "Animation-Dropped", "Animation-NoObject"];
 Timer? dummyTimer;
+// history 1 = successful pick else 0
+List<List<int>> pickHistoryPerPerson = [];
 
 // meme stuff
 int memeCounter = 0;

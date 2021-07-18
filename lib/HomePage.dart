@@ -198,6 +198,7 @@ class _HomePageState extends State<HomePage> {
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         ElevatedButton(
           onPressed: () {
+            // init time for each person
             int nSecondsPerPerson = nMeetingMinutes * 60 ~/ meetingPersons.length;
             durationPerPerson = Duration(seconds: nSecondsPerPerson);
             if (animationOptions[chosenAnimation].contains("Luke")) {
@@ -209,6 +210,10 @@ class _HomePageState extends State<HomePage> {
               if (durationPerPerson.inSeconds < durationPicks[chosenAnimation].inSeconds)
                 durationPerPerson = durationPicks[chosenAnimation];
             }
+
+            // init pickHistories
+            pickHistoryPerPerson = List.generate(meetingPersons.length, (index) => []);
+
             _showConfirmDialog();
           },
           child: Text(

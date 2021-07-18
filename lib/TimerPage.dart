@@ -133,6 +133,15 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                             Text(picksLeft.toString()),
                           ],
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Pickgüte:"),
+                            Text(
+                              calculatePickAccuracyofPerson(currentSpeaker),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   )
@@ -179,6 +188,15 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
         ),
       ],
     );
+  }
+
+  String calculatePickAccuracyofPerson(int currentSpeaker) {
+    if (pickHistoryPerPerson.length <= currentSpeaker) return "100%";
+    if (pickHistoryPerPerson[currentSpeaker].length == 0) return "100%";
+    int nSuccessfull =
+        pickHistoryPerPerson[currentSpeaker].reduce((value, element) => value + element);
+    return (nSuccessfull / pickHistoryPerPerson[currentSpeaker].length * 100).round().toString() +
+        "%";
   }
 
   void _goToNextSpeaker() {
