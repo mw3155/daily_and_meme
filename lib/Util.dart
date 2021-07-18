@@ -93,6 +93,7 @@ void resetGlobalVariables() {
   newMeetingPerson = "";
   nMillisecondsPassedCurrentSpeaker = 0;
   dummyTimer!.cancel();
+  chosenAnimation = 1;
 
   // timer
   currentSpeaker = 0;

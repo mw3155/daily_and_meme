@@ -74,17 +74,35 @@ class _HomePageState extends State<HomePage> {
       children: [
         Text(
           "Teilnehmer:",
-          textAlign: TextAlign.left,
+          textAlign: TextAlign.start, // does not work
         ),
         SizedBox(
           //height: MediaQuery.of(context).size.height * 0.4,
-          width: MediaQuery.of(context).size.width * 0.3,
+          width: MediaQuery.of(context).size.width * 0.2,
           child: ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: meetingPersons.length,
             itemBuilder: (context, index) {
               final item = meetingPersons[index];
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    item,
+                    textAlign: TextAlign.left,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        meetingPersons.removeAt(index);
+                      });
+                    },
+                    child: Icon(Icons.cancel_presentation),
+                  )
+                ],
+              );
+              /*
               return Dismissible(
                 // Each Dismissible must contain a Key. Keys allow Flutter to
                 // uniquely identify widgets.
@@ -119,6 +137,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               );
+              */
             },
           ),
         ),
@@ -159,13 +178,15 @@ class _HomePageState extends State<HomePage> {
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         Text("Animation:"),
         ToggleButtons(
+          borderColor: Colors.blueGrey,
           children: [
             // borders between togglebuttons are too complicated, use this instead...
             Text("  " + animationOptions[0] + "  "),
             Text("  " + animationOptions[1] + "  "),
             Text("  " + animationOptions[2] + "  "),
           ],
-          isSelected: selectedAnimation,
+          isSelected: List.generate(
+              animationOptions.length, (index) => index == chosenAnimation ? true : false),
           onPressed: (int index) {
             setState(() {
               selectedAnimation = List.generate(animationOptions.length, (index) => false);
@@ -178,13 +199,16 @@ class _HomePageState extends State<HomePage> {
         ElevatedButton(
           onPressed: () {
             int nSecondsPerPerson = nMeetingMinutes * 60 ~/ meetingPersons.length;
-            // floor duration per person to be divisible by durationPick
-            nSecondsPerPerson = nSecondsPerPerson ~/
-                durationPicks[chosenAnimation].inSeconds *
-                durationPicks[chosenAnimation].inSeconds;
             durationPerPerson = Duration(seconds: nSecondsPerPerson);
-            if (durationPerPerson.inSeconds < durationPicks[chosenAnimation].inSeconds)
-              durationPerPerson = durationPicks[chosenAnimation];
+            if (animationOptions[chosenAnimation].contains("Luke")) {
+              // floor duration per person to be divisible by durationPick
+              nSecondsPerPerson = nSecondsPerPerson ~/
+                  durationPicks[chosenAnimation].inSeconds *
+                  durationPicks[chosenAnimation].inSeconds;
+              durationPerPerson = Duration(seconds: nSecondsPerPerson);
+              if (durationPerPerson.inSeconds < durationPicks[chosenAnimation].inSeconds)
+                durationPerPerson = durationPicks[chosenAnimation];
+            }
             _showConfirmDialog();
           },
           child: Text(

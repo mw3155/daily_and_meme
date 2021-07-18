@@ -48,7 +48,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
         if (!isTimePaused) {
           nMillisecondsPassedCurrentSpeaker += 100;
         }
-        if (nMillisecondsPassedCurrentSpeaker % 1000 == 0) print(nMillisecondsPassedCurrentSpeaker);
+        //if (nMillisecondsPassedCurrentSpeaker % 1000 == 0) print(nMillisecondsPassedCurrentSpeaker);
       });
     });
 
@@ -87,7 +87,9 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
         meetingPersons.length <= currentSpeaker ? "null" : meetingPersons[currentSpeaker];
 
     double currentValueInSeconds = (1 - _controller.value) * _controller.duration!.inSeconds;
-    int picksLeft = (currentValueInSeconds - 1) ~/ durationPicks[chosenAnimation].inSeconds + 1;
+    int picksLeft = 0;
+    if (animationOptions[chosenAnimation].contains("Luke"))
+      picksLeft = (currentValueInSeconds - 1) ~/ durationPicks[chosenAnimation].inSeconds + 1;
 
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -113,7 +115,27 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
           children: [
             Padding(padding: EdgeInsets.all(32)),
             animationOptions[chosenAnimation].contains("Luke")
-                ? Text("Sprecher: \t$speakerName\nVerbleibende Picks: \t$picksLeft")
+                ? SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Sprecher:"),
+                            Text(speakerName),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Verbleibende Picks:"),
+                            Text(picksLeft.toString()),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
                 : Padding(padding: EdgeInsets.all(0)),
             animationOptions[chosenAnimation].contains("Luke")
                 ? RobotAnimation()

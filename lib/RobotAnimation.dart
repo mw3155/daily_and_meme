@@ -16,13 +16,6 @@ class RobotAnimation extends StatefulWidget {
 }
 
 class _RobotAnimationState extends State<RobotAnimation> {
-  // TODO use this to stop when time finished; Check sample again w button
-  // TODO use this to stop when time finished; Check sample again w button
-  // TODO use this to stop when time finished; Check sample again w button
-  // TODO use this to stop when time finished; Check sample again w button
-  // TODO use this to stop when time finished; Check sample again w button
-  // TODO use this to stop when time finished; Check sample again w button
-  // TODO use this to stop when time finished; Check sample again w button
   void _togglePlay() {
     if (_controller == null) {
       return;
