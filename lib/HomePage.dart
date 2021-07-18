@@ -13,7 +13,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomSheet: buildBottomSheet(),
+      bottomSheet: buildBottomSheet(context),
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(defaultEdgeInsets),
@@ -163,6 +163,7 @@ class _HomePageState extends State<HomePage> {
             // borders between togglebuttons are too complicated, use this instead...
             Text("  " + animationOptions[0] + "  "),
             Text("  " + animationOptions[1] + "  "),
+            Text("  " + animationOptions[2] + "  "),
           ],
           isSelected: selectedAnimation,
           onPressed: (int index) {
@@ -178,11 +179,12 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             int nSecondsPerPerson = nMeetingMinutes * 60 ~/ meetingPersons.length;
             // floor duration per person to be divisible by durationPick
-            nSecondsPerPerson =
-                nSecondsPerPerson ~/ durationPick.inSeconds * durationPick.inSeconds;
+            nSecondsPerPerson = nSecondsPerPerson ~/
+                durationPicks[chosenAnimation].inSeconds *
+                durationPicks[chosenAnimation].inSeconds;
             durationPerPerson = Duration(seconds: nSecondsPerPerson);
-            if (durationPerPerson.inSeconds < durationPick.inSeconds)
-              durationPerPerson = durationPick;
+            if (durationPerPerson.inSeconds < durationPicks[chosenAnimation].inSeconds)
+              durationPerPerson = durationPicks[chosenAnimation];
             _showConfirmDialog();
           },
           child: Text(

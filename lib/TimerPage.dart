@@ -18,7 +18,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
       // disable going back
       onWillPop: () => Future.value(false),
       child: Scaffold(
-        bottomSheet: buildBottomSheet(),
+        bottomSheet: buildBottomSheet(context),
         body: Center(
           child: AnimatedContainer(
             duration: Duration(seconds: 1),
@@ -32,7 +32,6 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   }
 
   late AnimationController _controller;
-  late Timer dummyTimer;
 
   @override
   void initState() {
@@ -49,7 +48,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
         if (!isTimePaused) {
           nMillisecondsPassedCurrentSpeaker += 100;
         }
-        //if (nMillisecondsPassedCurrentSpeaker % 1000 == 0) print(nMillisecondsPassedCurrentSpeaker);
+        if (nMillisecondsPassedCurrentSpeaker % 1000 == 0) print(nMillisecondsPassedCurrentSpeaker);
       });
     });
 
@@ -88,7 +87,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
         meetingPersons.length <= currentSpeaker ? "null" : meetingPersons[currentSpeaker];
 
     double currentValueInSeconds = (1 - _controller.value) * _controller.duration!.inSeconds;
-    int picksLeft = (currentValueInSeconds - 1) ~/ durationPick.inSeconds + 1;
+    int picksLeft = (currentValueInSeconds - 1) ~/ durationPicks[chosenAnimation].inSeconds + 1;
 
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -113,10 +112,10 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(padding: EdgeInsets.all(32)),
-            animationOptions[chosenAnimation] == "Luke v2"
+            animationOptions[chosenAnimation].contains("Luke")
                 ? Text("Sprecher: \t$speakerName\nVerbleibende Picks: \t$picksLeft")
                 : Padding(padding: EdgeInsets.all(0)),
-            animationOptions[chosenAnimation] == "Luke v2"
+            animationOptions[chosenAnimation].contains("Luke")
                 ? RobotAnimation()
                 : Padding(padding: EdgeInsets.all(0)),
             animationOptions[chosenAnimation] == "Stoppuhr"
@@ -164,7 +163,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     isExtraTime = false;
     isTimePaused = false;
     nMillisecondsPassedCurrentSpeaker = 0;
-    dummyTimer.cancel();
+    dummyTimer!.cancel();
     currentSpeaker++;
     print(meetingPersons.length);
     print(currentSpeaker);
@@ -191,7 +190,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                 ),
                 onPressed: () {
                   isExtraTime = true;
-                  dummyTimer.cancel();
+                  dummyTimer!.cancel();
                   nMillisecondsPassedCurrentSpeaker = 0;
                   Navigator.pushNamed(context, "timer");
                 },

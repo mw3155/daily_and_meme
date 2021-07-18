@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -10,10 +11,9 @@ List<String> meetingPersons = ["Sebastian", "Florian", "Markus", "Thomas", "Alex
 String newMeetingPerson = "";
 
 // timer
-List<String> animationOptions = ["Luke v2", "Stoppuhr"];
-List<bool> selectedAnimation =
-    List.generate(animationOptions.length, (index) => index > 0 ? false : true);
-int chosenAnimation = 0;
+List<String> animationOptions = ["Luke v10", "Luke v2", "Stoppuhr"];
+List<bool> selectedAnimation = [false, true, false];
+int chosenAnimation = 1;
 int currentSpeaker = 0;
 Duration durationPerPerson = Duration(seconds: 1);
 Duration durationExtraTime = Duration(seconds: 30);
@@ -22,8 +22,9 @@ bool isTimePaused = false;
 double nMillisecondsPassedCurrentSpeaker = 0;
 
 // robot timer
-Duration durationPick = Duration(seconds: 30);
+List<Duration> durationPicks = [Duration(seconds: 3), Duration(seconds: 30)];
 List<String> robotAnimations = ["Animation-Success", "Animation-Dropped", "Animation-NoObject"];
+Timer? dummyTimer;
 
 // meme stuff
 int memeCounter = 0;
@@ -41,7 +42,7 @@ const double defaultEdgeInsets = 16;
 // bottomsheet
 final String githubURL = "https://github.com/mw3155/DailyAndMeme";
 
-Widget buildBottomSheet() {
+Widget buildBottomSheet(BuildContext context) {
   return AnimatedContainer(
     duration: Duration(seconds: 1),
     color: isTimePaused ? colorPaused : Colors.blueGrey,
@@ -66,6 +67,7 @@ Widget buildBottomSheet() {
           onPressed: () {
             resetGlobalVariables();
             navigatorKey.currentState?.pushNamed("/");
+            Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
           },
         ),
         IconButton(
@@ -90,6 +92,7 @@ void resetGlobalVariables() {
   meetingPersons = ["Sebastian", "Florian", "Markus", "Thomas", "Alex"];
   newMeetingPerson = "";
   nMillisecondsPassedCurrentSpeaker = 0;
+  dummyTimer!.cancel();
 
   // timer
   currentSpeaker = 0;

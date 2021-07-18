@@ -9,7 +9,7 @@ class GetToWorkPage extends StatelessWidget {
       // disable going back
       onWillPop: () => Future.value(false),
       child: Scaffold(
-        bottomSheet: buildBottomSheet(),
+        bottomSheet: buildBottomSheet(context),
         body: Center(
           child: Container(
             padding: const EdgeInsets.all(32),

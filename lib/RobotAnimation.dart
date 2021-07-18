@@ -39,7 +39,7 @@ class _RobotAnimationState extends State<RobotAnimation> {
     setState(() {
       _riveArtboard = artboard;
       _riveArtboard!.instance().animationByName(nextAnimationName)!.animation.speed =
-          1.0 / durationPick.inSeconds;
+          1.0 / durationPicks[chosenAnimation].inSeconds;
     });
   }
 
@@ -69,7 +69,7 @@ class _RobotAnimationState extends State<RobotAnimation> {
         setState(() {
           _riveArtboard = artboard;
           _riveArtboard!.instance().animationByName(nextAnimationName)!.animation.speed =
-              1.0 / durationPick.inSeconds;
+              1.0 / durationPicks[chosenAnimation].inSeconds;
         });
       },
     );
@@ -84,7 +84,7 @@ class _RobotAnimationState extends State<RobotAnimation> {
 
     if (!isTimePaused &&
         isPlaying &&
-        nMillisecondsPassedCurrentSpeaker % durationPick.inMilliseconds == 0 &&
+        nMillisecondsPassedCurrentSpeaker % durationPicks[chosenAnimation].inMilliseconds == 0 &&
         myRiveFile != null) {
       Random nextRandom = new Random();
       _changeAnimation(robotAnimations[nextRandom.nextInt(3)]);
