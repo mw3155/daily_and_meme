@@ -3,7 +3,7 @@
 Contributions welcome!
 
 TODO:
-* add 'X' button to remove teilnehmer
+
 * like and share buttons
 * goto comments
 * annoying sounds

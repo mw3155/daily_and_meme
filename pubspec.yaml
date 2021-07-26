@@ -33,6 +33,8 @@ dependencies:
   flag: ^5.0.0-nullsafety
   url_launcher: ^6.0.3
   rive: ^0.7.22
+  flutter_emoji: ">= 2.0.0"
+
 
 
 dev_dependencies:

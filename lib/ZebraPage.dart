@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'Util.dart';
 
-class ShowZebraPage extends StatelessWidget {
+class ZebraPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

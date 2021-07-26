@@ -138,7 +138,10 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                           children: [
                             Text("Pickgüte:"),
                             Text(
-                              calculatePickAccuracyofPerson(currentSpeaker),
+                              calculatePickAccuracyofPersonAsString(
+                                  currentSpeaker >= meetingPersons.length // prevent index oob
+                                      ? ""
+                                      : meetingPersons[currentSpeaker]),
                             ),
                           ],
                         ),
@@ -190,15 +193,6 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     );
   }
 
-  String calculatePickAccuracyofPerson(int currentSpeaker) {
-    if (pickHistoryPerPerson.length <= currentSpeaker) return "100%";
-    if (pickHistoryPerPerson[currentSpeaker].length == 0) return "100%";
-    int nSuccessfull =
-        pickHistoryPerPerson[currentSpeaker].reduce((value, element) => value + element);
-    return (nSuccessfull / pickHistoryPerPerson[currentSpeaker].length * 100).round().toString() +
-        "%";
-  }
-
   void _goToNextSpeaker() {
     isExtraTime = false;
     isTimePaused = false;
@@ -208,7 +202,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     print(meetingPersons.length);
     print(currentSpeaker);
     currentSpeaker >= meetingPersons.length
-        ? Navigator.pushNamed(context, "meme")
+        ? Navigator.pushNamed(context, "leaderboard")
         : Navigator.pushNamed(context, "timer");
   }
 

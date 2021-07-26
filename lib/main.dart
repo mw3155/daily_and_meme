@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:steh_auf_uhr/LeaderboardPage.dart';
 
 import 'Util.dart';
 import 'GetToWorkPage.dart';
-import 'ShowZebraPage.dart';
+import 'ZebraPage.dart';
 import 'HomePage.dart';
 import 'TimerPage.dart';
 import 'MemePage.dart';
@@ -50,9 +51,10 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => HomePage(),
         "timer": (context) => TimerPage(),
+        "leaderboard": (context) => LeaderboardPage(),
         "meme": (context) => MemePage(),
         "work": (context) => GetToWorkPage(),
-        "zebra": (context) => ShowZebraPage(),
+        "zebra": (context) => ZebraPage(),
       },
     );
   }

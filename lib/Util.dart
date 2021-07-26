@@ -7,7 +7,7 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 // global variables are fun
 int nMeetingMinutes = 15;
-List<String> meetingPersons = ["Sebastian", "Florian", "Markus", "Thomas", "Alex"];
+List<String> meetingPersons = ["Sebastian", "Florian", "Markus", "Alex"];
 String newMeetingPerson = "";
 
 // timer
@@ -91,10 +91,10 @@ Widget buildBottomSheet(BuildContext context) {
 void resetGlobalVariables() {
   // global variables are fun
   nMeetingMinutes = 15;
-  meetingPersons = ["Sebastian", "Florian", "Markus", "Thomas", "Alex"];
+  meetingPersons = ["Sebastian", "Florian", "Markus", "Alex"];
   newMeetingPerson = "";
   nMillisecondsPassedCurrentSpeaker = 0;
-  dummyTimer!.cancel();
+  dummyTimer?.cancel();
   chosenAnimation = 1;
 
   // timer
@@ -107,4 +107,30 @@ void resetGlobalVariables() {
   // meme stuff
   memeCounter = 0;
   isLanguageGerman = false;
+}
+
+int calculatePickAccuracyofPerson(String speaker) {
+  int speakerIdx = meetingPersons.indexOf(speaker);
+
+  // dummy value to prevent index oob
+  if (speakerIdx == -1) return 100;
+
+  if (speakerIdx >= pickHistoryPerPerson.length) return 0;
+  // if persons was skipped
+  if (pickHistoryPerPerson[speakerIdx].length == 0) return 0;
+
+  // sum successful picks and div through number picks
+  int nSuccessfull = pickHistoryPerPerson[speakerIdx].reduce((value, element) => value + element);
+  return (nSuccessfull / pickHistoryPerPerson[speakerIdx].length * 100).round();
+}
+
+String calculatePickAccuracyofPersonAsString(String speaker) {
+  return calculatePickAccuracyofPerson(speaker).toString() + "%";
+}
+
+int comparePersonsByPickAccuracy(String p1, String p2) {
+  int pickAcc1 = calculatePickAccuracyofPerson(p1);
+  int pickAcc2 = calculatePickAccuracyofPerson(p2);
+  if (pickAcc1 > pickAcc2) return 1;
+  return 0;
 }

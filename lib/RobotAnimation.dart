@@ -85,6 +85,7 @@ class _RobotAnimationState extends State<RobotAnimation> {
       _changeAnimation(robotAnimations[nextRandomInt]);
 
       // save if pick success/fail for computing accuracy
+      print("adding hisotry for person $currentSpeaker");
       if (robotAnimations[nextRandomInt].contains("Success"))
         pickHistoryPerPerson[currentSpeaker].add(1);
       else
