@@ -6,6 +6,8 @@
 
 ## Getting started
 * compiled javascript page is located at build/web
+* cd build/web
+* python -m http.server 8000
 
 ## TODO:  
 * better robot animations
