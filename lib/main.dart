@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:steh_auf_uhr/LeaderboardPage.dart';
+import 'package:steh_auf_uhr/ScoreboardPage.dart';
 
 import 'Util.dart';
 import 'GetToWorkPage.dart';
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => HomePage(),
         "timer": (context) => TimerPage(),
-        "leaderboard": (context) => LeaderboardPage(),
+        "scoreboard": (context) => ScoreboardPage(),
         "meme": (context) => MemePage(),
         "work": (context) => GetToWorkPage(),
         "zebra": (context) => ZebraPage(),

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:numberpicker/numberpicker.dart';
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           actions: [
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -126,18 +127,28 @@ class _HomePageState extends State<HomePage> {
         ),
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         Text("Gesamtdauer (Minuten):"),
-        NumberPicker(
-            selectedTextStyle: TextStyle(
-              fontSize: myResponsiveFontSize,
-              color: Colors.amber,
-            ),
-            value: nMeetingMinutes,
-            minValue: 1,
-            maxValue: 100,
-            step: 1,
-            haptics: true,
-            axis: Axis.horizontal,
-            onChanged: (newValue) => setState(() => nMeetingMinutes = newValue)),
+        ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+          }),
+          child: NumberPicker(
+              selectedTextStyle: TextStyle(
+                fontSize: myResponsiveFontSize,
+                color: Colors.amber,
+              ),
+              value: nMeetingMinutes,
+              minValue: 1,
+              textStyle: TextStyle(
+                fontSize: myResponsiveFontSize,
+                color: Colors.black,
+              ),
+              maxValue: 100,
+              step: 1,
+              haptics: true,
+              axis: Axis.horizontal,
+              onChanged: (newValue) => setState(() => nMeetingMinutes = newValue)),
+        ),
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         Text("Animation:"),
         ToggleButtons(

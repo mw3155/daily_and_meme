@@ -7,7 +7,7 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 // global variables are fun
 int nMeetingMinutes = 15;
-List<String> meetingPersons = ["Sebastian", "Florian", "Markus", "Alex"];
+List<String> meetingPersons = ["Sebastian", "Florian", "Markus", "Alex", "Thomas", "Jakob"];
 String newMeetingPerson = "";
 
 // timer
@@ -23,7 +23,14 @@ double nMillisecondsPassedCurrentSpeaker = 0;
 
 // robot timer
 List<Duration> durationPicks = [Duration(seconds: 3), Duration(seconds: 30)];
-List<String> robotAnimations = ["Animation-Success", "Animation-Dropped", "Animation-NoObject"];
+List<String> robotAnimations = [
+  "Animation-Success",
+  "Animation-Success-Drop-High",
+  "Animation-Success-Throw",
+  "Animation-Dropped",
+  "Animation-NoObject"
+];
+int currentAnimationIdx = -1;
 Timer? dummyTimer;
 // history 1 = successful pick else 0
 List<List<int>> pickHistoryPerPerson = [];
@@ -42,7 +49,7 @@ double myResponsiveFontSize = 1;
 const double defaultEdgeInsets = 16;
 
 // bottomsheet
-final String githubURL = "https://github.com/mw3155/DailyAndMeme";
+final String githubURL = "https://github.com/mw3155/mw3155.github.io";
 
 Widget buildBottomSheet(BuildContext context) {
   return AnimatedContainer(

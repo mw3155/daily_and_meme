@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'Util.dart';
 
-class LeaderboardPage extends StatelessWidget {
+class ScoreboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -13,14 +13,14 @@ class LeaderboardPage extends StatelessWidget {
         body: Center(
           child: Container(
             padding: const EdgeInsets.all(32),
-            child: _buildLeaderboardPage(context),
+            child: _buildScoreboardPage(context),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildLeaderboardPage(BuildContext context) {
+  Widget _buildScoreboardPage(BuildContext context) {
     // TODO: sort persons by pick score; inplace sorting destroys indices -> need class :/
     //meetingPersons.sort(comparePersonsByPickAccuracy);
 
@@ -37,16 +37,13 @@ class LeaderboardPage extends StatelessWidget {
       else
         winners[i] = false;
     }
-    print(winners);
-    print(meetingPersons);
-    print(pickHistoryPerPerson);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.2,
-          width: MediaQuery.of(context).size.width * 0.2,
+          height: MediaQuery.of(context).size.height * 0.3,
+          width: MediaQuery.of(context).size.width * 0.3,
           child: ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
@@ -73,7 +70,7 @@ class LeaderboardPage extends StatelessWidget {
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         Image.network(
           "https://media.giphy.com/media/10hO3rDNqqg2Xe/giphy.gif",
-          width: MediaQuery.of(context).size.width * 0.5,
+          width: MediaQuery.of(context).size.width * 0.4,
           fit: BoxFit.fill,
         ),
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),

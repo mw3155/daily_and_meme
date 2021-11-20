@@ -116,7 +116,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
             Padding(padding: EdgeInsets.all(32)),
             animationOptions[chosenAnimation].contains("Luke")
                 ? SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.2,
+                    width: MediaQuery.of(context).size.width * 0.3,
                     child: Column(
                       children: [
                         Row(
@@ -196,13 +196,15 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   void _goToNextSpeaker() {
     isExtraTime = false;
     isTimePaused = false;
+    // TODO: maybe need to add last animation to history here
+    currentAnimationIdx = -1;
     nMillisecondsPassedCurrentSpeaker = 0;
     dummyTimer!.cancel();
     currentSpeaker++;
     print(meetingPersons.length);
     print(currentSpeaker);
     currentSpeaker >= meetingPersons.length
-        ? Navigator.pushNamed(context, "leaderboard")
+        ? Navigator.pushNamed(context, "scoreboard")
         : Navigator.pushNamed(context, "timer");
   }
 
