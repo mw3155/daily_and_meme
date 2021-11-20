@@ -219,7 +219,9 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () => Navigator.of(context).pop(), child: Text("Abbrechen")),
                   ElevatedButton(
                       child: Text('Starten'),
-                      onPressed: () {
+                      onPressed: () async {
+                        // save configured settings
+                        await saveSettingsAsync();
                         currentSpeaker = 0;
                         Navigator.pushNamed(context, "timer");
                       }),

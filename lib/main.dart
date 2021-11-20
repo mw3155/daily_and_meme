@@ -10,7 +10,7 @@ import 'TimerPage.dart';
 import 'MemePage.dart';
 
 void main() {
-  runApp(MyApp());
+  resetGlobalVariablesAsync().then((_) => runApp(MyApp()));
 }
 
 class MyApp extends StatelessWidget {

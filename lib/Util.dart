@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const int defaultMeetingMinutes = 15;
+const List<String> defaultMeetingPersons = ["Sebastian", "Florian", "Markus", "Alex"];
+const int defaultChosenAnimation = 1;
+
+const String prefKeyNMinutes = "n_meeting_minutes";
+const String prefkeyMeetingPersons = "meeting_persons";
+const String prefKeyChosenAnimation = "chosen_animation";
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
@@ -73,8 +82,8 @@ Widget buildBottomSheet(BuildContext context) {
           icon: Icon(Icons.home),
           tooltip: "Zur Startseite",
           iconSize: 32,
-          onPressed: () {
-            resetGlobalVariables();
+          onPressed: () async {
+            await resetGlobalVariablesAsync();
             navigatorKey.currentState?.pushNamed("/");
             Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
           },
@@ -95,14 +104,19 @@ Widget buildBottomSheet(BuildContext context) {
   );
 }
 
-void resetGlobalVariables() {
+Future<void> resetGlobalVariablesAsync() async {
+  // Try to get cached settings
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefInstance = await SharedPreferences.getInstance();
+
+  nMeetingMinutes = prefInstance.getInt(prefKeyNMinutes) ?? defaultMeetingMinutes;
+  meetingPersons = prefInstance.getStringList(prefkeyMeetingPersons) ?? [...defaultMeetingPersons];
+  chosenAnimation = prefInstance.getInt(prefKeyChosenAnimation) ?? defaultChosenAnimation;
+
   // global variables are fun
-  nMeetingMinutes = 15;
-  meetingPersons = ["Sebastian", "Florian", "Markus", "Alex"];
   newMeetingPerson = "";
   nMillisecondsPassedCurrentSpeaker = 0;
   dummyTimer?.cancel();
-  chosenAnimation = 1;
 
   // timer
   currentSpeaker = 0;
@@ -129,6 +143,16 @@ int calculatePickAccuracyofPerson(String speaker) {
   // sum successful picks and div through number picks
   int nSuccessfull = pickHistoryPerPerson[speakerIdx].reduce((value, element) => value + element);
   return (nSuccessfull / pickHistoryPerPerson[speakerIdx].length * 100).round();
+}
+
+Future<void> saveSettingsAsync() async {
+  // Save settings to cache
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefInstance = await SharedPreferences.getInstance();
+
+  prefInstance.setInt(prefKeyNMinutes, nMeetingMinutes);
+  prefInstance.setStringList(prefkeyMeetingPersons, meetingPersons);
+  prefInstance.setInt(prefKeyChosenAnimation, chosenAnimation);
 }
 
 String calculatePickAccuracyofPersonAsString(String speaker) {
