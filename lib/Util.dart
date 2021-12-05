@@ -34,6 +34,7 @@ double nMillisecondsPassedCurrentSpeaker = 0;
 List<Duration> durationPicks = [Duration(seconds: 3), Duration(seconds: 30)];
 List<String> robotAnimations = [
   "Animation-Success",
+  "Animation-Success-Double",
   "Animation-Success-Drop-High",
   "Animation-Success-Throw",
   "Animation-Dropped",

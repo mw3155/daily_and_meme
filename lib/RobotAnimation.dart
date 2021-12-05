@@ -47,7 +47,7 @@ class _RobotAnimationState extends State<RobotAnimation> {
 
     // Load the animation file from the bundle, note that you could also
     // download this. The RiveFile just expects a list of bytes.
-    rootBundle.load('assets/animations/animation-dailyrobot-v5.riv').then(
+    rootBundle.load('assets/animations/animation-dailyrobot-v6.riv').then(
       (data) async {
         // Load the RiveFile from the binary data.
         myRiveFile = RiveFile.import(data);
@@ -85,13 +85,18 @@ class _RobotAnimationState extends State<RobotAnimation> {
       _changeAnimation(robotAnimations[nextRandomInt]);
 
       // add previous animation outcome to history
-      if (currentAnimationIdx != -1){
+      if (currentAnimationIdx != -1) {
         // save if pick success/fail for computing accuracy
         print("adding history for person $currentSpeaker");
-        if (robotAnimations[currentAnimationIdx].contains("Success"))
-          pickHistoryPerPerson[currentSpeaker].add(1);
-        else
+        if (robotAnimations[currentAnimationIdx].contains("Success")) {
+          if (robotAnimations[currentAnimationIdx].contains("Double")) {
+            pickHistoryPerPerson[currentSpeaker].add(2);
+          } else {
+            pickHistoryPerPerson[currentSpeaker].add(1);
+          }
+        } else {
           pickHistoryPerPerson[currentSpeaker].add(0);
+        }
       }
 
       // save new animation outcome to add to history next time
