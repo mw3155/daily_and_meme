@@ -2,8 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animated_background/animated_background.dart';
-import 'package:steh_auf_uhr/RainParticleBehaviour.dart';
-
 import 'RainParticleBehaviour.dart';
 
 import 'package:numberpicker/numberpicker.dart';
@@ -16,37 +14,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  ParticleOptions particleOptions = ParticleOptions(
-    image: Image.asset('assets/images/snowflake-koch-iter7.png'),
-    baseColor: Colors.blue,
-    spawnOpacity: 0.0,
-    opacityChangeRate: 0.15,
-    minOpacity: 0.1,
-    maxOpacity: 0.4,
-    spawnMinSpeed: 30.0,
-    spawnMaxSpeed: 100.0,
-    spawnMinRadius: 7.0,
-    spawnMaxRadius: 25.0,
-    particleCount: 80,
-  );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomSheet: buildBottomSheet(context),
       body: Center(
-        child: Stack(
-          children: [
-            AnimatedBackground(
-              behaviour: RainParticleBehaviour(options: particleOptions),
-              vsync: this,
-              child: Text(""),
-            ),
-            Container(
-              padding: const EdgeInsets.all(defaultEdgeInsets),
-              child: _buildHomepage(),
-            ),
-          ],
+        child: AnimatedBackground(
+          behaviour: RainParticleBehaviour(options: particleOptions),
+          vsync: this,
+          child: Container(
+            padding: const EdgeInsets.all(defaultEdgeInsets),
+            child: _buildHomepage(),
+          ),
         ),
       ),
     );

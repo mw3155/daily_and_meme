@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:animated_background/animated_background.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,6 +62,21 @@ const double defaultEdgeInsets = 16;
 
 // bottomsheet
 final String githubURL = "https://github.com/mw3155/DailyAndMeme";
+
+// Snowparticle
+ParticleOptions particleOptions = ParticleOptions(
+  image: Image.asset('assets/images/snowflake-koch-iter7.png'),
+  baseColor: Colors.blue,
+  spawnOpacity: 0.0,
+  opacityChangeRate: 0.15,
+  minOpacity: 0.1,
+  maxOpacity: 0.4,
+  spawnMinSpeed: 30.0,
+  spawnMaxSpeed: 100.0,
+  spawnMinRadius: 7.0,
+  spawnMaxRadius: 25.0,
+  particleCount: 80,
+);
 
 Widget buildBottomSheet(BuildContext context) {
   return AnimatedContainer(
