@@ -1,9 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:animated_background/animated_background.dart';
-import 'RainParticleBehaviour.dart';
-
 import 'package:numberpicker/numberpicker.dart';
 
 import 'Util.dart';
@@ -19,13 +16,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Scaffold(
       bottomSheet: buildBottomSheet(context),
       body: Center(
-        child: AnimatedBackground(
-          behaviour: RainParticleBehaviour(options: particleOptions),
-          vsync: this,
-          child: Container(
-            padding: const EdgeInsets.all(defaultEdgeInsets),
-            child: _buildHomepage(),
-          ),
+        child: Container(
+          padding: const EdgeInsets.all(defaultEdgeInsets),
+          child: _buildHomepage(),
         ),
       ),
     );

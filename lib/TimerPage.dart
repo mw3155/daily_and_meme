@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'RobotAnimation.dart';
 import 'CountdownClock.dart';
 
+import 'package:animated_background/animated_background.dart';
+import 'RainParticleBehaviour.dart';
+
 import 'Util.dart';
 
 class TimerPage extends StatefulWidget {
@@ -11,7 +14,7 @@ class TimerPage extends StatefulWidget {
   _TimerPageState createState() => _TimerPageState();
 }
 
-class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMixin {
+class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -24,7 +27,11 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
             duration: Duration(seconds: 1),
             color: isTimePaused ? colorPaused : Colors.blueGrey,
             padding: const EdgeInsets.all(32),
-            child: _buildTimerPage(),
+            child: AnimatedBackground(
+              behaviour: RainParticleBehaviour(options: particleOptions),
+              vsync: this,
+              child: _buildTimerPage(),
+            ),
           ),
         ),
       ),
