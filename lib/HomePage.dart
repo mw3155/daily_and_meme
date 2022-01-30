@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'package:numberpicker/numberpicker.dart';
 
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'Util.dart';
 
 class HomePage extends StatefulWidget {
@@ -68,11 +71,40 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
+
+  Widget _buildNewDomainMessage() {
+    return SizedBox(
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: ElevatedButton(onPressed: _launchURL, 
+          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.amber), shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(color: Colors.black),
+          ))),
+
+            child: Text(
+              "Guten Morgen liebe DailyAndMemer!" 
+              "\n" +
+              "Aufgrund von finanziellen Engpässen sieht sich unser Team leider dazu gezwungen die Domain dailyandmeme.xyz aufzugeben."
+              "\n" +
+              "Unser Service steht Ihnen ab sofort unter www.dailyandmeme2022.xyz zur Verfügung.",
+          textAlign: TextAlign.left,
+          style: TextStyle(color: Colors.black),
+          ),
+          ),
+        );
+  }
+
+  void _launchURL() async {
+    if (!await launch("http://www.dailyandmeme2022.xyz")) throw 'Could not launch';
+  }
+
   Widget _buildHomepage() {
     var newMeetingPersonController = TextEditingController();
     return Column(
       //crossAxisAlignment: CrossAxisAlignment.center, // no effect?
       children: [
+        _buildNewDomainMessage(),  
+        Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         Text(
           "Teilnehmer:",
           textAlign: TextAlign.start, // does not work

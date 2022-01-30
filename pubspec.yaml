@@ -36,6 +36,8 @@ dependencies:
   flutter_emoji: ">= 2.0.0"
   shared_preferences: ^2.0.8
   animated_background: ^2.0.0
+  flutter_linkify: ^5.0.2
+
 
 
 
