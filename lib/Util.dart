@@ -62,6 +62,7 @@ const double defaultEdgeInsets = 16;
 
 // bottomsheet
 final String githubURL = "https://github.com/mw3155/DailyAndMeme";
+final String buymeacoffeeURL = "https://www.buymeacoffee.com/mw3155";
 
 // Snowparticle
 ParticleOptions particleOptions = ParticleOptions(
@@ -88,15 +89,6 @@ Widget buildBottomSheet(BuildContext context) {
       children: [
         IconButton(
           color: Colors.black,
-          tooltip: "Zebra",
-          icon: Icon(Icons.audiotrack),
-          iconSize: 32,
-          onPressed: () {
-            navigatorKey.currentState?.pushNamed("zebra");
-          },
-        ),
-        IconButton(
-          color: Colors.black,
           icon: Icon(Icons.home),
           tooltip: "Zur Startseite",
           iconSize: 32,
@@ -108,6 +100,17 @@ Widget buildBottomSheet(BuildContext context) {
         ),
         IconButton(
           color: Colors.black,
+          icon: Icon(Icons.coffee),
+          tooltip: "Buy me a coffee :)",
+          iconSize: 32,
+          onPressed: () async {
+            await canLaunch(buymeacoffeeURL)
+                ? await launch(buymeacoffeeURL)
+                : throw 'Could not launch $buymeacoffeeURL';
+          },
+        ),
+        IconButton(
+          color: Colors.black,
           icon: Icon(Icons.pest_control),
           tooltip: "Github",
           iconSize: 32,
@@ -115,6 +118,15 @@ Widget buildBottomSheet(BuildContext context) {
             await canLaunch(githubURL)
                 ? await launch(githubURL)
                 : throw 'Could not launch $githubURL';
+          },
+        ),
+        IconButton(
+          color: Colors.black,
+          tooltip: "Zebra",
+          icon: Icon(Icons.audiotrack),
+          iconSize: 32,
+          onPressed: () {
+            navigatorKey.currentState?.pushNamed("zebra");
           },
         ),
       ],

@@ -17,7 +17,6 @@
 * annoying sounds
 * annoying ads
 * we are hiring
-* donations (buy me a beer)
 
 
 ## How to build:
