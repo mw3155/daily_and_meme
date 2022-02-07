@@ -69,27 +69,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-
   Widget _buildNewDomainMessage() {
     return SizedBox(
-          width: MediaQuery.of(context).size.width * 0.6,
-          child: ElevatedButton(onPressed: _launchURL, 
-          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.amber), shape: MaterialStateProperty.all(RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-            side: BorderSide(color: Colors.black),
-          ))),
-
-            child: Text(
-              "Guten Morgen liebe DailyAndMemer!" 
-              "\n" +
+      width: MediaQuery.of(context).size.width * 0.6,
+      child: ElevatedButton(
+        onPressed: _launchURL,
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.amber),
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: BorderSide(color: Colors.black),
+            ))),
+        child: Text(
+          "Guten Morgen liebe DailyAndMemer!"
+                  "\n" +
               "Aufgrund von finanziellen Engpässen sieht sich unser Team leider dazu gezwungen die Domain dailyandmeme.xyz aufzugeben."
-              "\n" +
+                  "\n" +
               "Unser Service steht Ihnen ab sofort unter www.dailyandmeme2022.xyz zur Verfügung.",
           textAlign: TextAlign.left,
           style: TextStyle(color: Colors.black),
-          ),
-          ),
-        );
+        ),
+      ),
+    );
   }
 
   void _launchURL() async {
@@ -101,7 +102,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Column(
       //crossAxisAlignment: CrossAxisAlignment.center, // no effect?
       children: [
-        _buildNewDomainMessage(),  
+        _buildNewDomainMessage(),
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         Text(
           "Teilnehmer:",
@@ -110,19 +111,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         SizedBox(
           //height: MediaQuery.of(context).size.height * 0.4,
           width: MediaQuery.of(context).size.width * 0.2,
-          child: ListView.builder(
+          child: ReorderableListView.builder(
+            onReorder: (oldIdx, newIdx) {
+              if (oldIdx < newIdx) {
+                newIdx -= 1;
+              }
+              String movedPerson = meetingPersons.removeAt(oldIdx);
+              meetingPersons.insert(newIdx, movedPerson);
+            },
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
+            buildDefaultDragHandles: false,
             itemCount: meetingPersons.length,
             itemBuilder: (context, index) {
               final item = meetingPersons[index];
               return Row(
+                key: ValueKey(item),
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    item,
-                    textAlign: TextAlign.left,
-                  ),
+                  ReorderableDragStartListener(child: 
+                    Text(
+                      item,
+                      textAlign: TextAlign.left,
+                    ),
+                  index: index),
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
@@ -130,7 +142,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       });
                     },
                     child: Icon(Icons.cancel_presentation),
-                  )
+                  ),
                 ],
               );
             },
