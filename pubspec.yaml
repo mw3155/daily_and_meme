@@ -36,10 +36,7 @@ dependencies:
   flutter_emoji: ">= 2.0.0"
   shared_preferences: ^2.0.8
   animated_background: ^2.0.0
-
-
-
-
+  audioplayers: ^0.20.1
 
 
 dev_dependencies:
@@ -61,6 +58,7 @@ flutter:
   assets:
     - assets/animations/
     - assets/images/
+    - assets/sounds/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
