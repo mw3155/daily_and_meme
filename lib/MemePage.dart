@@ -1,12 +1,8 @@
-import 'package:flutter/material.dart';
-
-import 'package:flag/flag.dart';
-import 'dart:convert' show jsonDecode;
-import 'package:http/http.dart' as http;
-
-import 'package:audioplayers/audioplayers.dart';
-
 import 'dart:async';
+import 'dart:convert' show jsonDecode;
+import 'package:flutter/material.dart';
+import 'package:flag/flag.dart';
+import 'package:http/http.dart' as http;
 
 import 'Util.dart';
 
@@ -16,8 +12,6 @@ class MemePage extends StatefulWidget {
 }
 
 class _MemePageState extends State<MemePage> {
-  late Timer memeTimer;
-  int showJumpScare = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -36,40 +30,12 @@ class _MemePageState extends State<MemePage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    memeTimer = Timer.periodic(Duration(seconds: 3), (timer) {
-      setState(() {
-        showJumpScare = showJumpScare - 1;
-        if (showJumpScare < 0) {
-          showJumpScare = 3;
-        }
-      });
-    });
-    // TODO: cont, timer sometimes not starting; make global?... idk
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    memeTimer.cancel();
-  }
-
   String currentMemeTitle = "";
   String currentMemeImage = "";
 
   Widget _buildMemePage() {
     if (memeCounter == 0) getNextMeme();
 
-    if (showJumpScare == 0) {
-      AudioPlayer audioPlayer = AudioPlayer();
-      audioPlayer.play("assets/sounds/mixkit-giant-monster-roar-1972.wav", isLocal: true);
-      return Image.asset(
-        "assets/images/ghost-jump-scare-moment.gif",
-        scale: 0.1,
-      );
-    }
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -89,8 +55,7 @@ class _MemePageState extends State<MemePage> {
                     memeCounter = 0;
                   });
                 },
-                child: Flag(
-                  isLanguageGerman ? "US" : "DE",
+                child: Flag.fromString((isLanguageGerman ? "US" : "DE"),
                   height: 32,
                   width: 32,
                   fit: BoxFit.scaleDown,

@@ -6,8 +6,8 @@ class CountdownClock extends AnimatedWidget {
   // not sure what this key thing does, but "?" seems like a good fix
   CountdownClock({Key? key, required this.animation, required this.maxDuration})
       : super(key: key, listenable: animation);
-  Animation<double> animation;
-  Duration maxDuration;
+  final Animation<double> animation;
+  final Duration maxDuration;
 
   @override
   Widget build(BuildContext context) {

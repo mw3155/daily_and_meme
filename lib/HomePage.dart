@@ -98,7 +98,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildHomepage() {
-    var newMeetingPersonController = TextEditingController();
     return Column(
       //crossAxisAlignment: CrossAxisAlignment.center, // no effect?
       children: [

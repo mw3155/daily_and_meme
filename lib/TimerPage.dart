@@ -46,9 +46,7 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
 
     // HACK: create a timer to update a dummy value, to trigger rebuild of widget
     // -> updates the pick-count...lol...
-    // TODO decreasing timer does not increase fps, right??
-    // TODO decreasing timer does not increase fps, right??
-    // TODO decreasing timer does not increase fps, right??
+    // TODO does decreasing timer increase fps?
     dummyTimer = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
       setState(() {
         // nSeconds should not be increased while pausing; leads to animation jumps
@@ -98,25 +96,8 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
     if (animationOptions[chosenAnimation].contains("Luke"))
       picksLeft = (currentValueInSeconds - 1) ~/ durationPicks[chosenAnimation].inSeconds + 1;
 
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Stack(
       children: [
-        /*
-        TweenAnimationBuilder(
-            tween: Tween<double>(begin: 0, end: screenWidth * 0.44),
-            duration: Duration(seconds: 3),
-            builder: (_, double i, __) {
-              return Positioned(
-                left: i,
-                child: Text(
-                  // comment out, maybe this tween stuff is useful later
-                  //"$speakerName",
-                  "",
-                ),
-              );
-            }),
-        */
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

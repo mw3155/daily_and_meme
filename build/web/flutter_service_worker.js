@@ -3,7 +3,7 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "26d66a2313d7d63fc1d6c631c0579fc5",
+  "assets/AssetManifest.json": "7bb22719f7bf11d06c7e5bda3086964a",
 "assets/assets/animations/animation-dailyrobot-v3.riv": "a40fa5a1e00ced68895c9a5fba70fde9",
 "assets/assets/animations/animation-dailyrobot-v4.riv": "7603f3f33b6ced643e68bbd58fa26544",
 "assets/assets/animations/animation-dailyrobot-v5.rev": "807a0a78eb8e797f1c6713be9abe2617",
@@ -12,13 +12,10 @@ const RESOURCES = {
 "assets/assets/animations/animation-dailyrobot-v7.riv": "8152f57761865c399a9ef2fc627947e4",
 "assets/assets/animations/animation-robot1.riv": "a34e1ec4b093ab82e941aab0d910748f",
 "assets/assets/animations/animation-robot2.riv": "d40fe16e535fb211b3f63ca75b0db130",
-"assets/assets/images/ghost-jump-scare-moment.gif": "8cd8208a0fe21ddb24e59bcbffb135e3",
-"assets/assets/images/jump1.jpg": "0683bb65128e85b0625cb451f7fbd476",
 "assets/assets/images/snowflake-koch-iter7.png": "911a050d6ff99b391d710e4cc32e9816",
-"assets/assets/sounds/mixkit-giant-monster-roar-1972.wav": "96e05eb428f50b31d79cc8e76c78296c",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/fonts/MaterialIcons-Regular.otf": "4e6447691c9509f7acdbf8a931a85ca1",
-"assets/NOTICES": "cf2e854d8c754e92e39f846b94be4217",
+"assets/NOTICES": "99ced0ec2eb3729a3eaced06ea113d5d",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
 "assets/packages/flag/res/flag/a.txt": "b5a3499a576030c8f27bb27b77efe113",
 "assets/packages/flag/res/flag/ad.svg": "6a14dcd1af407b41e8921b9bc6c90e32",
@@ -225,9 +222,9 @@ const RESOURCES = {
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"index.html": "4b8c8aaa7c08f74157162a6c19efcecc",
-"/": "4b8c8aaa7c08f74157162a6c19efcecc",
-"main.dart.js": "bd742d3c1e726155940962e5d4b56bc2",
+"index.html": "fd2ec888b15df1f3634f86b931f96b2e",
+"/": "fd2ec888b15df1f3634f86b931f96b2e",
+"main.dart.js": "75dc27c580446b5f1674102f7e3ef643",
 "manifest.json": "2b5971204ed299ec2d4bed792140fd91",
 "version.json": "f85f11b6c995814878e9d75d6d0d229b"
 };
