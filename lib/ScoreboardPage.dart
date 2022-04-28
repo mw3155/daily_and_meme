@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'Util.dart';
 
@@ -38,6 +39,22 @@ class ScoreboardPage extends StatelessWidget {
         winners[i] = false;
     }
 
+    // check day
+    var date = DateTime.now();
+    var weekday = DateFormat('EEEE').format(date); // prints Tuesday
+    // display wednesdayfrog or zebra
+    var imageBottom;
+    if (weekday == "Wednesday") {
+      imageBottom = Image.asset("assets/images/frosch-mittwoch.jpg",
+      width: MediaQuery.of(context).size.width * 0.2, fit:BoxFit.fill);
+    } else {
+      imageBottom = Image.network(
+        "https://media.giphy.com/media/10hO3rDNqqg2Xe/giphy.gif",
+        width: MediaQuery.of(context).size.width * 0.4,
+        fit: BoxFit.fill,
+      );
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -68,11 +85,7 @@ class ScoreboardPage extends StatelessWidget {
           ),
         ),
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
-        Image.network(
-          "https://media.giphy.com/media/10hO3rDNqqg2Xe/giphy.gif",
-          width: MediaQuery.of(context).size.width * 0.4,
-          fit: BoxFit.fill,
-        ),
+        imageBottom,
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         ElevatedButton(
             onPressed: () {
