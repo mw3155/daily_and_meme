@@ -146,7 +146,7 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                     maxDuration: _controller.duration!,
                   )
                 : Padding(padding: EdgeInsets.all(0)),
-            Padding(padding: EdgeInsets.all(32)),
+            //Padding(padding: EdgeInsets.all(32)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -166,6 +166,12 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                       isTimePaused ? "Fortsetzen" : "Pause",
                     )),
                 ElevatedButton(
+                  onPressed: () {
+                    _moveSpeakerToLastPlace();
+                  },
+                  child: Text("Nach hinten aufschieben"),
+                ),
+                ElevatedButton(
                   child: Text(
                     "Fertig",
                   ),
@@ -181,16 +187,20 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
     );
   }
 
+  void _moveSpeakerToLastPlace() {
+    String curSpeakerName = meetingPersons.removeAt(currentSpeaker);
+    meetingPersons.add(curSpeakerName);
+    currentSpeaker--;
+    _goToNextSpeaker();
+  }
+
   void _goToNextSpeaker() {
     isExtraTime = false;
     isTimePaused = false;
-    // TODO: maybe need to add last animation to history here
     currentAnimationIdx = -1;
     nMillisecondsPassedCurrentSpeaker = 0;
     dummyTimer!.cancel();
     currentSpeaker++;
-    print(meetingPersons.length);
-    print(currentSpeaker);
     currentSpeaker >= meetingPersons.length
         ? Navigator.pushNamed(context, "scoreboard")
         : Navigator.pushNamed(context, "timer");

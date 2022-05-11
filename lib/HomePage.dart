@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Column(
       //crossAxisAlignment: CrossAxisAlignment.center, // no effect?
       children: [
-        _buildNewDomainMessage(),
+        //_buildNewDomainMessage(),
         Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
         Text(
           "Teilnehmer:",
