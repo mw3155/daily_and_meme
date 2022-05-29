@@ -30,8 +30,14 @@
 .pub-cache/
 .pub/
 /build/*
+
+# add built web app
 !/build/web/
 !/build/web/*
+
+# add built windows app
+!/build/windows/runner/Release/
+!/build/windows/runner/Release/*
 
 # Web related
 lib/generated_plugin_registrant.dart
