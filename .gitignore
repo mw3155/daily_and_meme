@@ -36,8 +36,13 @@
 !/build/web/*
 
 # add built windows app
+!/build/windows/
+/build/windows/*
+!/build/windows/runner/
+/build/windows/runner/*
 !/build/windows/runner/Release/
-!/build/windows/runner/Release/*
+/build/windows/runner/Release/*
+!/build/windows/runner/Release/daily_and_meme.msix
 
 # Web related
 lib/generated_plugin_registrant.dart
