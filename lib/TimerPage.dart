@@ -23,19 +23,12 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
       child: Scaffold(
         bottomSheet: buildBottomSheet(context),
         body: Center(
-          child: _buildTimerPage(),
-          /*
-          AnimatedContainer(
+          child: AnimatedContainer(
             duration: Duration(seconds: 1),
             color: isTimePaused ? colorPaused : Colors.blueGrey,
             padding: const EdgeInsets.all(32),
-            child: AnimatedBackground(
-              behaviour: RainParticleBehaviour(options: particleOptions),
-              vsync: this,
-              child: _buildTimerPage(),
-            ),
+            child: _buildTimerPage(),
           ),
-          */
         ),
       ),
     );
