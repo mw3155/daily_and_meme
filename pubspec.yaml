@@ -1,4 +1,4 @@
-name: steh_auf_uhr
+name: daily_and_meme
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -42,6 +42,15 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  msix: ^3.6.2
+
+msix_config:
+  display_name: DailyAndMeme
+  publisher_display_name: DailyAndMemeInc
+  #identity_name: company.suite.flutterapp
+  msix_version: 1.0.0.0
+  #logo_path: C:\path\to\logo.png
+  capabilities: internetClient
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,6 +1,6 @@
 {
-    "name": "steh_auf_uhr",
-    "short_name": "steh_auf_uhr",
+    "name": "daily_and_meme",
+    "short_name": "daily_and_meme",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

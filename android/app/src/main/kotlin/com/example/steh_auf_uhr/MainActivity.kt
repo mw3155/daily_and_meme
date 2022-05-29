@@ -1,4 +1,4 @@
-package com.example.steh_auf_uhr
+package com.example.daily_and_meme
 
 import io.flutter.embedding.android.FlutterActivity
 
