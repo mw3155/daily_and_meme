@@ -39977,7 +39977,7 @@ gp_(){var s=this.e
 s=s==null?null:s.a.a
 return s===!0},
 bh(){this.bQ()
-$.mg().ej(0,"assets/animations/animation-dailyrobot-v7.riv").c0(0,new A.agS(this),t.P)},
+$.mg().ej(0,"assets/animations/animation-dailyrobot-v8.riv").c0(0,new A.agS(this),t.P)},
 P(a,b){var s,r,q,p,o=this,n=b.a_(t.w).f.a.gjS()*0.6
 if($.ht&&o.gp_())o.Ma()
 if(!$.ht&&!o.gp_())o.Ma()

@@ -3,13 +3,14 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "bb4bfeb8e33f4fb7b570789bd6a136b0",
+  "assets/AssetManifest.json": "4d3e5b825091a6b670c4a5d08a501767",
 "assets/assets/animations/animation-dailyrobot-v3.riv": "a40fa5a1e00ced68895c9a5fba70fde9",
 "assets/assets/animations/animation-dailyrobot-v4.riv": "7603f3f33b6ced643e68bbd58fa26544",
 "assets/assets/animations/animation-dailyrobot-v5.rev": "807a0a78eb8e797f1c6713be9abe2617",
 "assets/assets/animations/animation-dailyrobot-v5.riv": "9da84966f714df025cd06037092fecb4",
 "assets/assets/animations/animation-dailyrobot-v6.riv": "29cc8a08d40c4f3fecc6f39f7c52c0a2",
 "assets/assets/animations/animation-dailyrobot-v7.riv": "8152f57761865c399a9ef2fc627947e4",
+"assets/assets/animations/animation-dailyrobot-v8.riv": "43a84dfda80846fc2083e84c7cbd672e",
 "assets/assets/animations/animation-robot1.riv": "a34e1ec4b093ab82e941aab0d910748f",
 "assets/assets/animations/animation-robot2.riv": "d40fe16e535fb211b3f63ca75b0db130",
 "assets/assets/images/frosch-mittwoch.jpg": "6ba45a10acdce134a4f176d058d5d6a5",
@@ -555,9 +556,9 @@ const RESOURCES = {
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"index.html": "c74e18e8c57838130932364362043f15",
-"/": "c74e18e8c57838130932364362043f15",
-"main.dart.js": "6c7c01f4247ff753b44a52662ecde693",
+"index.html": "c25bc13808f10c99f7df06518290c04c",
+"/": "c25bc13808f10c99f7df06518290c04c",
+"main.dart.js": "8fb41784abfaa8100c17a2b1f92b2146",
 "manifest.json": "39ddd6478a0d6957df04019f9cd01da7",
 "version.json": "a4db76db4380472631d6dcb4878c1baf"
 };

@@ -21,3 +21,5 @@
 
 ## How to build:
 * flutter build web --web-renderer html
+* flutter build windows
+* flutter pub run msix:create

@@ -47,7 +47,7 @@ class _RobotAnimationState extends State<RobotAnimation> {
 
     // Load the animation file from the bundle, note that you could also
     // download this. The RiveFile just expects a list of bytes.
-    rootBundle.load('assets/animations/animation-dailyrobot-v7.riv').then(
+    rootBundle.load('assets/animations/animation-dailyrobot-v8.riv').then(
       (data) async {
         // Load the RiveFile from the binary data.
         myRiveFile = RiveFile.import(data);
