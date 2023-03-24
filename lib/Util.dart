@@ -7,7 +7,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const int defaultMeetingMinutes = 15;
-const List<String> defaultMeetingPersons = ["Sebastian", "Florian", "Markus", "Alex"];
+const List<String> defaultMeetingPersons = [
+  "Sebastian",
+  "Florian",
+  "Markus",
+  "Alex"
+];
 const int defaultChosenAnimation = 1;
 
 const String prefKeyNMinutes = "n_meeting_minutes";
@@ -18,7 +23,15 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 // global variables are fun
 int nMeetingMinutes = 15;
-List<String> meetingPersons = ["Sebastian", "Florian", "Markus", "Alex", "Thomas", "Yannick", "Ralf"];
+List<String> meetingPersons = [
+  "Sebastian",
+  "Florian",
+  "Markus",
+  "Alex",
+  "Thomas",
+  "Yannick",
+  "Ralf"
+];
 String newMeetingPerson = "";
 
 // timer
@@ -95,7 +108,8 @@ Widget buildBottomSheet(BuildContext context) {
           onPressed: () async {
             await resetGlobalVariablesAsync();
             navigatorKey.currentState?.pushNamed("/");
-            Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
           },
         ),
         IconButton(
@@ -129,6 +143,24 @@ Widget buildBottomSheet(BuildContext context) {
             navigatorKey.currentState?.pushNamed("zebra");
           },
         ),
+        IconButton(
+          color: Colors.black,
+          tooltip: "It's Chuck Time",
+          icon: Image.asset('assets/images/icons8-chuck-norris-100.png'),
+          iconSize: 32,
+          onPressed: () {
+            navigatorKey.currentState?.pushNamed("chucknorris");
+          },
+        ),
+        IconButton(
+          color: Colors.black,
+          tooltip: "It's Quiz Time",
+          icon: Icon(Icons.question_mark),
+          iconSize: 32,
+          onPressed: () {
+            navigatorKey.currentState?.pushNamed("quizpage");
+          },
+        ),
       ],
     ),
   );
@@ -139,9 +171,12 @@ Future<void> resetGlobalVariablesAsync() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefInstance = await SharedPreferences.getInstance();
 
-  nMeetingMinutes = prefInstance.getInt(prefKeyNMinutes) ?? defaultMeetingMinutes;
-  meetingPersons = prefInstance.getStringList(prefkeyMeetingPersons) ?? [...defaultMeetingPersons];
-  chosenAnimation = prefInstance.getInt(prefKeyChosenAnimation) ?? defaultChosenAnimation;
+  nMeetingMinutes =
+      prefInstance.getInt(prefKeyNMinutes) ?? defaultMeetingMinutes;
+  meetingPersons = prefInstance.getStringList(prefkeyMeetingPersons) ??
+      [...defaultMeetingPersons];
+  chosenAnimation =
+      prefInstance.getInt(prefKeyChosenAnimation) ?? defaultChosenAnimation;
 
   // global variables are fun
   newMeetingPerson = "";
@@ -171,7 +206,8 @@ int calculatePickAccuracyofPerson(String speaker) {
   if (pickHistoryPerPerson[speakerIdx].length == 0) return 0;
 
   // sum successful picks and div through number picks
-  int nSuccessfull = pickHistoryPerPerson[speakerIdx].reduce((value, element) => value + element);
+  int nSuccessfull = pickHistoryPerPerson[speakerIdx]
+      .reduce((value, element) => value + element);
   return (nSuccessfull / pickHistoryPerPerson[speakerIdx].length * 100).round();
 }
 

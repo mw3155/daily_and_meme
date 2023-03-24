@@ -1,3 +1,5 @@
+import 'package:daily_and_meme/ChuckNorrisPage.dart';
+import 'package:daily_and_meme/QuizTimePage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,7 +24,8 @@ class MyApp extends StatelessWidget {
       title: 'Daily and Meme',
       builder: (context, child) {
         // init font size
-        myResponsiveFontSize = MediaQuery.of(context).size.height / myFontSizeScaleFactor;
+        myResponsiveFontSize =
+            MediaQuery.of(context).size.height / myFontSizeScaleFactor;
 
         return Theme(
           data: ThemeData(
@@ -55,6 +58,8 @@ class MyApp extends StatelessWidget {
         "meme": (context) => MemePage(),
         "work": (context) => GetToWorkPage(),
         "zebra": (context) => ZebraPage(),
+        "chucknorris": (context) => ChuckNorrisPage(),
+        "quizpage": (context) => QuizTimePage(),
       },
     );
   }
