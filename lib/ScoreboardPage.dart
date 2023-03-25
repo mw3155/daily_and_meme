@@ -39,20 +39,16 @@ class ScoreboardPage extends StatelessWidget {
         winners[i] = false;
     }
 
-    // check day
-    var date = DateTime.now();
-    var weekday = DateFormat('EEEE').format(date); // prints Tuesday
-    // display wednesdayfrog or zebra
+    // display wednesdayfrog or zebra depending on weekday
     var imageBottom;
-    if (weekday == "Wednesday") {
+    if (DateTime.now().weekday == 3) {
       imageBottom = Image.asset("assets/images/frosch-mittwoch.jpg",
-      width: MediaQuery.of(context).size.width * 0.2, fit:BoxFit.fill);
+          width: MediaQuery.of(context).size.width * 0.2, fit: BoxFit.fill);
     } else {
       imageBottom = Image.network(
-        "https://media.giphy.com/media/10hO3rDNqqg2Xe/giphy.gif",
-        width: MediaQuery.of(context).size.width * 0.4,
-        fit: BoxFit.fill,
-      );
+          "https://media.giphy.com/media/10hO3rDNqqg2Xe/giphy.gif",
+          width: MediaQuery.of(context).size.width * 0.4,
+          fit: BoxFit.fill);
     }
 
     return Column(
@@ -76,7 +72,8 @@ class ScoreboardPage extends StatelessWidget {
                     textAlign: TextAlign.left,
                   ),
                   Text(
-                    calculatePickAccuracyofPersonAsString(meetingPersons[index]),
+                    calculatePickAccuracyofPersonAsString(
+                        meetingPersons[index]),
                     textAlign: TextAlign.right,
                   ),
                 ],
@@ -91,7 +88,19 @@ class ScoreboardPage extends StatelessWidget {
             onPressed: () {
               Navigator.pushNamed(context, "meme");
             },
-            child: Text("Bring mich zu den Memes!"))
+            child: Text("Gib mir Memes!")),
+        Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "chucknorris");
+            },
+            child: Text("Chuck Norris!")),
+        Padding(padding: EdgeInsets.all(defaultEdgeInsets)),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "quizpage");
+            },
+            child: Text("Quiz-Time!"))
       ],
     );
   }
