@@ -1,5 +1,4 @@
 import 'package:daily_and_meme/ChuckNorrisPage.dart';
-import 'package:daily_and_meme/QuizTimePage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,6 +9,7 @@ import 'ZebraPage.dart';
 import 'HomePage.dart';
 import 'TimerPage.dart';
 import 'MemePage.dart';
+import 'QuizGame/QuizTimePage.dart';
 
 void main() {
   resetGlobalVariablesAsync().then((_) => runApp(MyApp()));
