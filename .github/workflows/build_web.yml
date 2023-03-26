@@ -15,8 +15,23 @@ jobs:
       - run: flutter --version
       
       - run: flutter pub get
+      # this fails... (smoke test)
       #- run: flutter test
       - run: flutter build web --web-renderer html
+      
+      # commit the build files to the repo (https://github.com/orgs/community/discussions/25234#discussioncomment-3246984)
+      - name: switching from HTTPS to SSH
+        run: git remote set-url origin ${{ secrets.ssh }}
+      - name: check for changes
+        run: git status
+      - name: stage changed files
+        run: git add .
+      - name: commit changed files
+        run: git commit -m "Auto build for web"
+      - name: fetch from master
+        run: git fetch origin master
+      - name: push code to master
+        run: git push origin HEAD:master
 
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
